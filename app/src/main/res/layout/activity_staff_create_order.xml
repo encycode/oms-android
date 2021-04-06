@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundDefault"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context=".StaffCreateOrder">
+
+    <Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_marginBottom="30dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="10dp"
+            android:hint="Enter Shop Name"
+            android:textColorHint="@color/buttonDefault"
+            app:boxStrokeColor="@color/buttonDefault"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/buttonDefault"
+            app:hintTextColor="@color/buttonDefault"
+            app:startIconDrawable="@drawable/shop"
+            app:startIconTint="@color/buttonDefault">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/shopNameET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/buttonDefault" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="10dp"
+            android:hint="Enter shop Mobile Number"
+            android:textColorHint="@color/buttonDefault"
+            app:boxStrokeColor="@color/buttonDefault"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/buttonDefault"
+            app:hintTextColor="@color/buttonDefault"
+            app:startIconDrawable="@drawable/mobile"
+            app:startIconTint="@color/buttonDefault">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/shopMobileET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:singleLine="true"
+                android:textColor="@color/buttonDefault" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="10dp"
+            android:hint="Enter Shop Address"
+            android:textColorHint="@color/buttonDefault"
+            app:boxStrokeColor="@color/buttonDefault"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/buttonDefault"
+            app:hintTextColor="@color/buttonDefault"
+            app:startIconDrawable="@drawable/address"
+            app:startIconTint="@color/buttonDefault">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/shopAddressET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/buttonDefault" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:layout_margin="40dp"
+            android:backgroundTint="@color/buttonDefault"
+            android:text="Create Order"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+</LinearLayout>
