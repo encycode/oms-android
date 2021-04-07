@@ -11,14 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.encycode.sheetalfoods.R;
+import com.encycode.sheetalfoods.entity.Products;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AllProductsAdapter extends RecyclerView.Adapter<AllProductsAdapter.AllProductHolder> {
 
-    List<String> productNames = new ArrayList<>();
-    List<String> productPerCaret = new ArrayList<>();
+    List<Products> products = new ArrayList<>();
 
     Context context;
 
@@ -36,18 +36,17 @@ public class AllProductsAdapter extends RecyclerView.Adapter<AllProductsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull AllProductHolder holder, int position) {
-        holder.name.setText(productNames.get(position));
-        holder.pcQuan.setText(productPerCaret.get(position));
+        Products current = products.get(position);
+        holder.name.setText(current.getName());
+        holder.pcQuan.setText(current.getCaretItem());
     }
 
     @Override
     public int getItemCount() {
-        return productNames.size();
+        return products.size();
     }
 
     public void setData(String name,String perCaretQuan) {
-        productNames.add(name);
-        productPerCaret.add(perCaretQuan);
     }
 
     public class AllProductHolder extends RecyclerView.ViewHolder {

@@ -13,14 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.encycode.sheetalfoods.R;
 import com.encycode.sheetalfoods.StaffCreateOrder;
+import com.encycode.sheetalfoods.entity.Categories;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
 
-    List<Integer> images = new ArrayList<>();
-    List<String>  titles = new ArrayList<>();
+    List<Categories> categories  = new ArrayList<>();
 
     public CategoryAdapter(Context context) {
         this.context = context;
@@ -38,23 +38,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
-            holder.title.setText(titles.get(position));
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(context, StaffCreateOrder.class);
-                    context.startActivity(i);
-                }
-            });
+            Categories current = categories.get(position);
+            holder.title.setText(current.getName());
     }
 
     @Override
     public int getItemCount() {
-        return titles.size();
+        return categories.size();
     }
 
-    public void setData(int image,String title) {
-        titles.add(title);
+    public void setData(int a,String b) {
+        //categories.add();
     }
 
     class CategoryHolder extends RecyclerView.ViewHolder {
