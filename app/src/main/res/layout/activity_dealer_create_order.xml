@@ -25,12 +25,34 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/shopNameTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Bharat Ice Cream"
             android:textSize="30sp"
+            android:layout_margin="10dp"
             android:gravity="center"
             android:textStyle="bold"
+            android:textColor="@color/buttonDefault"/>
+
+        <TextView
+            android:id="@+id/mobileNoTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="82356678193"
+            android:textSize="25sp"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/buttonDefault"/>
+
+        <TextView
+            android:id="@+id/categoryTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sunday"
+            android:textSize="25sp"
+            android:layout_margin="10dp"
+            android:gravity="center"
             android:textColor="@color/buttonDefault"/>
 
 
