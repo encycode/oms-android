@@ -66,20 +66,6 @@ public class MainActivity extends AppCompatActivity {
                         for (int i = 0; i < categoryResponse.size(); i++) {
                             setDataAdapter(categoryResponse.get(i).getName(),categoryResponse.get(i).getImage(),categoryResponse.get(i).getStatus(),categoryResponse.get(i).getCreatedAt(),categoryResponse.get(i).getUpdatedAt(),categoryResponse.get(i).getDeletedAt());
                         }
-//                            String name = categoryResponse.get(i).getName();
-//                            String image = categoryResponse.get(i).getImage();
-//                            boolean status = categoryResponse.get(i).getStatus() == 1;
-//                            String createdAt = categoryResponse.get(i).getCreatedAt();
-//                            String updatedAt = categoryResponse.get(i).getUpdatedAt();
-//                            String deletedAt = categoryResponse.get(i).getDeletedAt();
-//                            if(deletedAt == null) {
-//                                deletedAt = "null";
-//                            }
-//                            categoriesList.add(new Categories("Milk Products","qwerty",true,"10 March","12 March","null"));
-//                            Log.d("Api Response", "onResponse: { \n" + name + "\n" + image + "\n" + status + "\n"+ createdAt + "\n" + updatedAt  + "\n" + deletedAt + "\n" + " }" );
-////                            Categories data = new Categories(name,image,status,createdAt,updatedAt,deletedAt);
-////                            categoriesList.add(data);
-//                        }
                     }
                 }
             }
