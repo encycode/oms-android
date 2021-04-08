@@ -32,7 +32,9 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView categoryRecyclerView;
     Toolbar toolbar;
     private APIService mAPIService;
+    private static List<Categories> categoriesList;
 
+    //    List<Category> categoryResponse;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         categoryRecyclerView = findViewById(R.id.categoryRecyclerView);
         categoryRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        List<Categories> categoriesList = new ArrayList<>();
+        categoriesList = new ArrayList<>();
 
         mAPIService.CategoryGetRequest().enqueue(new Callback<CategoryRequest>() {
             @Override
@@ -58,22 +60,26 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 if (response.isSuccessful()) {
                     if (response.code() == 200) {
-                        Log.d("cat", "onResponse: "+ response.body().getMessage());
+                        Log.d("cat", "onResponse: " + response.body().getMessage());
                         List<Category> categoryResponse = response.body().getCategories();
-                        for (int i=0; i<categoryResponse.size(); i++) {
-                            String name = categoryResponse.get(i).getName();
-                            String image = categoryResponse.get(i).getImage();
-                            boolean status = categoryResponse.get(i).getStatus() == 1;
-                            String createdAt = categoryResponse.get(i).getCreatedAt();
-                            String updatedAt = categoryResponse.get(i).getUpdatedAt();
-                            String deletedAt = categoryResponse.get(i).getDeletedAt();
-                            if(deletedAt == null) {
-                                deletedAt = "null";
-                            }
-                            Log.d("Api Response", "onResponse: { \n" + name + "\n" + image + "\n" + status + "\n"+ createdAt + "\n" + updatedAt  + "\n" + deletedAt + "\n" + " }" );
-                            Categories data = new Categories(name,image,status,createdAt,updatedAt,deletedAt);
-                            categoriesList.add(data);
+                        Log.d("Size of List", "onResponse: " + categoryResponse.size());
+                        for (int i = 0; i < categoryResponse.size(); i++) {
+                            setDataAdapter(categoryResponse.get(i).getName(),categoryResponse.get(i).getImage(),categoryResponse.get(i).getStatus(),categoryResponse.get(i).getCreatedAt(),categoryResponse.get(i).getUpdatedAt(),categoryResponse.get(i).getDeletedAt());
                         }
+//                            String name = categoryResponse.get(i).getName();
+//                            String image = categoryResponse.get(i).getImage();
+//                            boolean status = categoryResponse.get(i).getStatus() == 1;
+//                            String createdAt = categoryResponse.get(i).getCreatedAt();
+//                            String updatedAt = categoryResponse.get(i).getUpdatedAt();
+//                            String deletedAt = categoryResponse.get(i).getDeletedAt();
+//                            if(deletedAt == null) {
+//                                deletedAt = "null";
+//                            }
+//                            categoriesList.add(new Categories("Milk Products","qwerty",true,"10 March","12 March","null"));
+//                            Log.d("Api Response", "onResponse: { \n" + name + "\n" + image + "\n" + status + "\n"+ createdAt + "\n" + updatedAt  + "\n" + deletedAt + "\n" + " }" );
+////                            Categories data = new Categories(name,image,status,createdAt,updatedAt,deletedAt);
+////                            categoriesList.add(data);
+//                        }
                     }
                 }
             }
@@ -83,14 +89,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("error", t.getMessage().toString());
             }
         });
+    }
+
+    public void setDataAdapter(String name,String img,int status,String create,String update,String delete) {
         CategoryAdapter adapter = new CategoryAdapter(this);
-
-        categoriesList.add(new Categories("Milk Products","qwerty",true,"10 March","12 March","null"));
-        categoriesList.add(new Categories("IceCream","qwerty",true,"10 March","12 March","null"));
-        categoriesList.add(new Categories("Frozen Products","qwerty",true,"10 March","12 March","null"));
+        categoriesList.add(new Categories(name,img,status==1,create,update, delete));
         adapter.setData(categoriesList);
-        Log.d("Category Adapter", "onCreate: " + adapter.toString());
         categoryRecyclerView.setAdapter(adapter);
-
     }
 }
