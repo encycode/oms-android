@@ -15,6 +15,7 @@ public class OrdersViewModel extends AndroidViewModel {
 
     private OrdersRepo repo;
     private LiveData<List<Orders>> allOrders;
+
     public OrdersViewModel(@NonNull Application application) {
         super(application);
         repo = new OrdersRepo(application);
@@ -31,5 +32,9 @@ public class OrdersViewModel extends AndroidViewModel {
 
     public LiveData<List<Orders>> getAllOrders() {
         return allOrders;
+    }
+
+    public Orders getSpecificOrder(int orderID) {
+        return repo.getSpecificOrder(orderID);
     }
 }

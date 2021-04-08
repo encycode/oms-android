@@ -29,6 +29,10 @@ public class OrderDetailsViewModel extends AndroidViewModel {
         repo.delete(orders);
     }
 
+    public OrderDetails getSpecificOrderDetails(int orderID) {
+        return repo.getSpecificOrderDetails(orderID);
+    }
+
     public LiveData<List<OrderDetails>> getAllOrderDetails() {
         return allOrderDetails;
     }

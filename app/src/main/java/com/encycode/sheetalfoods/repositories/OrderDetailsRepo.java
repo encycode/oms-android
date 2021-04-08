@@ -13,6 +13,9 @@ import com.encycode.sheetalfoods.entity.OrderDetails;
 import com.encycode.sheetalfoods.entity.Orders;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class OrderDetailsRepo {
     private OrderDetailsDao dao;
@@ -36,6 +39,20 @@ public class OrderDetailsRepo {
         return allOrdersDetails;
     }
 
+    public OrderDetails getSpecificOrderDetails(int orderID){
+        OrderDetails orderDetails = null;
+        try {
+            orderDetails = new GetSpecificOrderDetailsAsyncTask(dao).execute(orderID).get(20, TimeUnit.SECONDS);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+        return orderDetails;
+    }
+
     public static class InsertAsyncTask extends AsyncTask<OrderDetails,Void,Void> {
 
         private OrderDetailsDao dao;
@@ -48,6 +65,21 @@ public class OrderDetailsRepo {
         protected Void doInBackground(OrderDetails... orderDetails) {
             dao.insert(orderDetails[0]);
             return null;
+        }
+    }
+
+    public static class GetSpecificOrderDetailsAsyncTask extends AsyncTask<Integer,Void,OrderDetails> {
+
+        private OrderDetailsDao dao;
+
+        public GetSpecificOrderDetailsAsyncTask(OrderDetailsDao dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected OrderDetails doInBackground(Integer... integers) {
+            OrderDetails orderDetails = dao.getSpecificOrderDetails(integers[0]);
+            return orderDetails;
         }
     }
 

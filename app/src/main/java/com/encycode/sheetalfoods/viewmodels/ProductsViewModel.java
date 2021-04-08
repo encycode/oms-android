@@ -24,4 +24,8 @@ public class ProductsViewModel extends AndroidViewModel {
     public LiveData<List<Products>> getAllProducts() {
         return allProducts;
     }
+
+    public LiveData<List<Products>> getAllProductsForSpecificProductType(int productID) {
+        return repo.getAllProductsForSpecificProductType(productID);
+    }
 }

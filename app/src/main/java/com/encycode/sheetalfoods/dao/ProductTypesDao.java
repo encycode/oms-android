@@ -11,4 +11,7 @@ public interface ProductTypesDao {
 
     @Query("SELECT * FROM product_types")
     LiveData<List<ProductTypes>> getAllProductTypes();
+
+    @Query("SELECT * FROM product_types WHERE category_id = :categoryID")
+    LiveData<List<ProductTypes>> getAllProductTypesForSpecificCategory(int categoryID);
 }
