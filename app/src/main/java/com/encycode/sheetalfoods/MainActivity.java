@@ -67,9 +67,12 @@ public class MainActivity extends AppCompatActivity {
                             String createdAt = categoryResponse.get(i).getCreatedAt();
                             String updatedAt = categoryResponse.get(i).getUpdatedAt();
                             String deletedAt = categoryResponse.get(i).getDeletedAt();
-
+                            if(deletedAt == null) {
+                                deletedAt = "null";
+                            }
                             Log.d("Api Response", "onResponse: { \n" + name + "\n" + image + "\n" + status + "\n"+ createdAt + "\n" + updatedAt  + "\n" + deletedAt + "\n" + " }" );
-                            categoriesList.add(new Categories(name,image,status,createdAt,updatedAt,deletedAt));
+                            Categories data = new Categories(name,image,status,createdAt,updatedAt,deletedAt);
+                            categoriesList.add(data);
                         }
                     }
                 }
@@ -80,11 +83,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("error", t.getMessage().toString());
             }
         });
-
         CategoryAdapter adapter = new CategoryAdapter(this);
+
+        categoriesList.add(new Categories("Milk Products","qwerty",true,"10 March","12 March","null"));
+        categoriesList.add(new Categories("IceCream","qwerty",true,"10 March","12 March","null"));
+        categoriesList.add(new Categories("Frozen Products","qwerty",true,"10 March","12 March","null"));
         adapter.setData(categoriesList);
         Log.d("Category Adapter", "onCreate: " + adapter.toString());
-
         categoryRecyclerView.setAdapter(adapter);
 
     }

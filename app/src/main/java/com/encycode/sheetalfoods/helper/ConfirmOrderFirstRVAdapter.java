@@ -14,12 +14,12 @@ import com.encycode.sheetalfoods.R;
 
 import java.util.List;
 
-class ConfirmOrderFirstRVAdapte extends RecyclerView.Adapter<ConfirmOrderFirstRVAdapte.ConfirmOrderFirstRVHolder> {
+class ConfirmOrderFirstRVAdapter extends RecyclerView.Adapter<ConfirmOrderFirstRVAdapter.ConfirmOrderFirstRVHolder> {
 
     List<NestedRecyclerViewModel> arrayList;
     Context context;
 
-    public ConfirmOrderFirstRVAdapte(Context context) {
+    public ConfirmOrderFirstRVAdapter(Context context) {
         this.context = context;
     }
 

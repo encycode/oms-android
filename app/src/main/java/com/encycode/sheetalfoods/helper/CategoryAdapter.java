@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,12 +23,11 @@ import java.util.List;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
 
     List<Categories> categories = new ArrayList<>();
+    Context context;
 
     public CategoryAdapter(Context context) {
         this.context = context;
     }
-
-    Context context;
 
     @NonNull
     @Override
@@ -41,7 +41,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
         Categories current = categories.get(position);
-        Log.d("Category Adapter", "onBindViewHolder: " + current.getName());
         holder.title.setText(current.getName());
     }
 
