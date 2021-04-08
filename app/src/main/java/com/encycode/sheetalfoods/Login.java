@@ -31,15 +31,16 @@ public class Login extends AppCompatActivity {
     TextInputEditText username, password;
     String usernameVal, passwordVal;
     SharedPreferences sh;
-
+    SharedPreferences.Editor myEdit;
+    Intent i;
     private APIService mAPIService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Intent i = new Intent(Login.this, MainActivity.class);
+        i = new Intent(Login.this, MainActivity.class);
         sh = getSharedPreferences("LoginStatus",MODE_PRIVATE);
-        SharedPreferences.Editor myEdit = sh.edit();
+        myEdit = sh.edit();
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         if(sh.getBoolean("isLogin",false)) {
@@ -47,7 +48,7 @@ public class Login extends AppCompatActivity {
             finish();
         }
 
-        mAPIService = ApiUtils.getAPIService();
+        mAPIService = new ApiUtils(Login.this).getAPIService();
 
         login = findViewById(R.id.login);
         username = findViewById(R.id.username);
@@ -80,14 +81,20 @@ public class Login extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.code() == 200) {
                         Log.i("Login Status", "post submitted to API." + response.body().toString());
-                        Toast.makeText(Login.this, response.body().getAccessToken(), Toast.LENGTH_SHORT).show();
-                        dialogBoxDisplay(response.body().getAccessToken() + "\n" + response.body().getExpiresAt() + "\n" + response.body().getRole(), "Login Status", Login.this);
+//                        Toast.makeText(Login.this, response.body().getAccessToken(), Toast.LENGTH_SHORT).show();
+//                        dialogBoxDisplay(response.body().getAccessToken() + "\n" + response.body().getExpiresAt() + "\n" + response.body().getRole(), "Login Status", Login.this);
+                        myEdit.putBoolean("isLogin", true);
+                        myEdit.putString("token", response.body().getAccessToken());
+                        myEdit.commit();
+                        startActivity(i);
+                        finish();
                     }
                 } else{
                     if (response.code() == 401) {
                         APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
                         Log.i("Login Status", "post submitted to API." + message.getMessage());
-                        dialogBoxDisplay(message.getMessage(), "Login Status", Login.this);
+//                        dialogBoxDisplay(message.getMessage(), "Login Status", Login.this);
+                        Toast.makeText(Login.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
 

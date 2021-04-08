@@ -2,6 +2,7 @@ package com.encycode.sheetalfoods.helper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +21,14 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
 
-    List<Categories> categories  = new ArrayList<>();
+    List<Categories> categories = new ArrayList<>();
 
     public CategoryAdapter(Context context) {
         this.context = context;
     }
 
     Context context;
+
     @NonNull
     @Override
     public CategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -38,8 +40,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
-            Categories current = categories.get(position);
-            holder.title.setText(current.getName());
+        Categories current = categories.get(position);
+        Log.d("Category Adapter", "onBindViewHolder: " + current.getName());
+        holder.title.setText(current.getName());
     }
 
     @Override
@@ -47,14 +50,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         return categories.size();
     }
 
-    public void setData(int a,String b) {
-        //categories.add();
+    public void setData(List<Categories> categoriesList) {
+        categories = categoriesList;
     }
 
     class CategoryHolder extends RecyclerView.ViewHolder {
 
         ImageView image;
         TextView title;
+
         public CategoryHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.categoryImage);
