@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         categoriesList = new ArrayList<>();
 
+
         mAPIService.CategoryGetRequest().enqueue(new Callback<CategoryRequest>() {
             @Override
             public void onResponse(Call<CategoryRequest> call, Response<CategoryRequest> response) {
