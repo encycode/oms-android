@@ -1,17 +1,17 @@
 package com.encycode.sheetalfoods.helper;
 
-import com.encycode.sheetalfoods.helper.request.Category;
 import com.encycode.sheetalfoods.helper.request.CategoryRequest;
-import com.encycode.sheetalfoods.helper.request.Order;
 import com.encycode.sheetalfoods.helper.request.OrderPostRequest;
 import com.encycode.sheetalfoods.helper.request.OrderRequest;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 
 public interface APIService {
@@ -35,6 +35,11 @@ public interface APIService {
     @POST("api/orders")
     Call<OrderPostRequest> OrderPostRequest(@Field("orderby") String orderby,
                                             @Field("category") int category);
+
+
+    @Headers({"Accept: application/json"})
+    @DELETE("api/orders/delete")
+    Call<OrderPostRequest> OrderDeleteRequest(@Query("id") int id);
 
 
 }
