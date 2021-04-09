@@ -14,11 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.encycode.sheetalfoods.entity.Orders;
 import com.encycode.sheetalfoods.helper.APIError;
 import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
 import com.encycode.sheetalfoods.helper.GetSharedPreferences;
 import com.encycode.sheetalfoods.helper.request.OrderPostRequest;
+import com.encycode.sheetalfoods.viewmodels.OrdersViewModel;
 import com.google.gson.Gson;
 
 
@@ -32,6 +34,7 @@ public class DealerCreateOrder extends AppCompatActivity {
     Button btnCreateOrder;
     Intent i;
     Toolbar toolbar;
+    OrdersViewModel viewModel;
     private APIService mAPIService;
 
     @Override
@@ -51,6 +54,7 @@ public class DealerCreateOrder extends AppCompatActivity {
         category = findViewById(R.id.categoryTV);
         btnCreateOrder = findViewById(R.id.btnCreateOrder);
 
+        viewModel = new OrdersViewModel(getApplication());
         i = getIntent();
         mAPIService = new ApiUtils(DealerCreateOrder.this).getAPIService();
         GetSharedPreferences getSh = new GetSharedPreferences("LoginStatus", DealerCreateOrder.this);
@@ -79,6 +83,7 @@ public class DealerCreateOrder extends AppCompatActivity {
                         Log.i("Create Order Request", "post submitted to API." + response.body().getMessage());
                         Log.d("Order Response", "onResponse: " + response.body().getOrders().getOrderNumber());
                         dialogBoxDisplay("Order Place Successfully \n Your Order Number is : "+response.body().getOrders().getOrderNumber(),"Order",DealerCreateOrder.this);
+                        viewModel.insert(new Orders(response.body().getOrders().getId(),response.body().getOrders().getSenderClientid(),response.body().getOrders().getReceiverClientid(),response.body().getOrders().getShopName(),response.body().getOrders().getAddress(),response.body().getOrders().getMobile(),response.body().getOrders().getOrderby(),response.body().getOrders().getCategoryId(),response.body().getOrders().getStatus(),response.body().getOrders().getOrderNumber(),response.body().getOrders().getUserId(),response.body().getOrders().getCreatedAt(),response.body().getOrders().getUpdatedAt(),response.body().getOrders().getDeletedAt()));
                     }
                 } else {
                     if (response.code() == 401) {
