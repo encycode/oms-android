@@ -126,11 +126,12 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
+            android:id="@+id/btnCreateOrderStaff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"
             android:layout_margin="40dp"
             android:backgroundTint="@color/buttonDefault"
+            android:padding="15dp"
             android:text="Create Order"
             android:textColor="@color/white" />
 

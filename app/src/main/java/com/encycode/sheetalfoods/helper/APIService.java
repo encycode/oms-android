@@ -6,6 +6,7 @@ import com.encycode.sheetalfoods.helper.request.OrderDetailsEditRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsRequest;
 import com.encycode.sheetalfoods.helper.request.OrderPostRequest;
 import com.encycode.sheetalfoods.helper.request.OrderRequest;
+import com.encycode.sheetalfoods.helper.request.StaffOrderRequest;
 
 import retrofit2.Call;
 import retrofit2.http.DELETE;
@@ -39,6 +40,16 @@ public interface APIService {
     @POST("api/orders")
     Call<OrderPostRequest> OrderPostRequest(@Field("orderby") String orderby,
                                             @Field("category") int category);
+
+    @Headers({"Accept: application/json"})
+    @FormUrlEncoded
+    @POST("api/orders")
+    Call<StaffOrderRequest> OrderStaffPostRequest(@Field("receiver_client") int receiver_client,
+                                                  @Field("shop_name") String shop_name,
+                                                  @Field("address") String address,
+                                                  @Field("mobile") String mobile,
+                                                  @Field("orderby") String orderby,
+                                                  @Field("category") int category);
 
     @Headers({"Accept: application/json"})
     @FormUrlEncoded
