@@ -1,10 +1,12 @@
 package com.encycode.sheetalfoods.repositories;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
 import com.encycode.sheetalfoods.dao.CategoriesDao;
+import com.encycode.sheetalfoods.dao.OrdersDao;
 import com.encycode.sheetalfoods.databases.CategoriesDatabase;
 import com.encycode.sheetalfoods.entity.Categories;
 
@@ -23,5 +25,24 @@ public class CategoriesRepo {
 
     public LiveData<List<Categories>> getAllCategories() {
         return allCategories;
+    }
+
+    public void insert(Categories categories) {
+        new InsertAsyncTask(dao).execute(categories);
+    }
+
+    public class InsertAsyncTask extends AsyncTask<Categories,Void,Void> {
+
+        private CategoriesDao dao;
+
+        public InsertAsyncTask(CategoriesDao dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Categories... categories) {
+            dao.insert(categories[0]);
+            return null;
+        }
     }
 }

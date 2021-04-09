@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.encycode.sheetalfoods.entity.Orders;
 
@@ -24,4 +25,7 @@ public interface OrdersDao {
 
     @Query("SELECT * FROM orders WHERE id = :orderID")
     Orders getSpecificOrder(int orderID);
+
+    @Update
+    void update(Orders orders);
 }

@@ -11,8 +11,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.encycode.sheetalfoods.dao.OrderDetailsDao;
 import com.encycode.sheetalfoods.entity.OrderDetails;
+import com.encycode.sheetalfoods.entity.Orders;
+import com.encycode.sheetalfoods.helper.request.Order;
 
+@Database(entities = OrderDetails.class,version = 1)
 public abstract class OrderDetailsDatabase extends RoomDatabase {
+
     private static OrderDetailsDatabase instance;
 
     public abstract OrderDetailsDao orderDetailsDao();

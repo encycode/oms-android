@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.encycode.sheetalfoods.dao.OrdersDao;
 import com.encycode.sheetalfoods.databases.OrdersDatabase;
 import com.encycode.sheetalfoods.entity.Orders;
+import com.encycode.sheetalfoods.helper.request.Order;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -33,6 +34,8 @@ public class OrdersRepo {
         new DeleteAsyncTask(dao).execute(orders);
     }
 
+    public void update(Orders orders) { new UpdateAsyncTask(dao).execute(orders); }
+
     public LiveData<List<Orders>> getAllOrders() {
         return allOrders;
     }
@@ -56,6 +59,22 @@ public class OrdersRepo {
         }
     }
 
+    public static class UpdateAsyncTask extends AsyncTask<Orders,Void,Void> {
+
+        private OrdersDao dao;
+
+        public UpdateAsyncTask(OrdersDao dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Orders... orders) {
+            dao.update(orders[0]);
+            return null;
+        }
+    }
+
+
     public static class DeleteAsyncTask extends AsyncTask<Orders,Void,Void> {
 
         private OrdersDao dao;
@@ -66,7 +85,7 @@ public class OrdersRepo {
 
         @Override
         protected Void doInBackground(Orders... orders) {
-            dao.insert(orders[0]);
+            dao.delete(orders[0]);
             return null;
         }
     }

@@ -1,6 +1,9 @@
 package com.encycode.sheetalfoods;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 import android.widget.Toolbar;
+import android.widget.ViewAnimator;
 
 import com.encycode.sheetalfoods.entity.Categories;
 import com.encycode.sheetalfoods.entity.Orders;
@@ -17,6 +21,7 @@ import com.encycode.sheetalfoods.helper.CategoryAdapter;
 import com.encycode.sheetalfoods.helper.ViewOrdersAdapter;
 import com.encycode.sheetalfoods.helper.request.Order;
 import com.encycode.sheetalfoods.helper.request.OrderRequest;
+import com.encycode.sheetalfoods.viewmodels.OrdersViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +30,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static androidx.lifecycle.ViewModelProvider.*;
+
 public class ViewOrders extends AppCompatActivity {
 
     RecyclerView recyclerView;
     private APIService mAPIService;
     private static List<Orders> orderList;
     Toolbar toolbar;
+    OrdersViewModel viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +57,14 @@ public class ViewOrders extends AppCompatActivity {
         recyclerView = findViewById(R.id.viewOrderRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(ViewOrders.this));
         recyclerView.setHasFixedSize(true);
-
+        viewModel = ViewModelProviders.of(this).get(OrdersViewModel.class);
+        viewModel.getAllOrders().observe(this, new Observer<List<Orders>>() {
+            @Override
+            public void onChanged(List<Orders> orders) {
+                adapter.setAllOrders(orders);
+            }
+        });
+        recyclerView.setAdapter(adapter);
 
         mAPIService = new ApiUtils(ViewOrders.this).getAPIService();
         orderList = new ArrayList<>();
@@ -81,7 +96,7 @@ public class ViewOrders extends AppCompatActivity {
                             String deletedAt = ordersResponse.get(i).getDeletedAt();
 //                                    " } ");
                             Log.i("test Api", "onResponse: " + orderNumber + " -------------- "+shop_name);
-                           setDataAdapter(order_id,sender_clientid,receiver_clientid,shop_name,address,mobile,orderBy,categoryID,status,orderNumber,userID,createdAt,updatedAt,deletedAt);
+                           viewModel.insert(new Orders(order_id,sender_clientid,receiver_clientid,shop_name,address,mobile,orderBy,categoryID,status,orderNumber,userID,createdAt,updatedAt,deletedAt));
                         }
                     }
                 }
@@ -95,9 +110,5 @@ public class ViewOrders extends AppCompatActivity {
     }
 
     public void setDataAdapter(int order_id,int sender_clientid,int receiver_clientid,String shop_name, String address,String mobile,String orderBy,int categoryID,String status,String orderNumber,int userID,String createdAt, String updatedAt,String deletedAt) {
-        ViewOrdersAdapter adapter = new ViewOrdersAdapter(this);
-        orderList.add(new Orders(order_id,sender_clientid,receiver_clientid,shop_name,address,mobile,orderBy,categoryID,status,orderNumber,userID,createdAt,updatedAt,deletedAt));
-        adapter.setAllOrders(orderList);
-        recyclerView.setAdapter(adapter);
     }
 }

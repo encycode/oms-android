@@ -24,4 +24,6 @@ public class CategoriesViewModel extends AndroidViewModel {
     public LiveData<List<Categories>> getAllCategories() {
         return allCategories;
     }
+
+    public void insert(Categories categories) {repo.insert(categories);}
 }

@@ -1,6 +1,7 @@
 package com.encycode.sheetalfoods.helper;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import com.encycode.sheetalfoods.R;
 import com.encycode.sheetalfoods.entity.Orders;
 import com.encycode.sheetalfoods.helper.request.Order;
 import com.encycode.sheetalfoods.helper.request.OrderPostRequest;
+import com.encycode.sheetalfoods.viewmodels.OrdersViewModel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -71,6 +73,7 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
         holder.orderOpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                OrdersViewModel viewModel = new OrdersViewModel((Application)context.getApplicationContext());
                 new AlertDialog.Builder(context)
                         .setTitle("Title")
                         .setMessage("Do you really want to " + btnStatus + "?")
@@ -81,6 +84,8 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
                                 if (btnStatus.equals("reorder")) {
                                     //reorder
                                 } else if (btnStatus.equals("cancel")) {
+                                    viewModel.update(new Orders(currentOrder.getId(),currentOrder.getSenderClientID(),currentOrder.getReceiverClientID(),currentOrder.getShopName(),currentOrder.getAddress(),currentOrder.getMobile(),currentOrder.getOrderBy(),currentOrder.getCategoryID(),"Cancelled",currentOrder.getOrderNumber(),currentOrder.getUserID(),currentOrder.getCreatedAt(),currentOrder.getUpdatedAt(),currentOrder.getDeletedAt()));
+                                    notifyDataSetChanged();
                                     mAPIService = new ApiUtils(context).getAPIService();
                                     mAPIService.OrderDeleteRequest(currentOrder.getId()).enqueue(new Callback<OrderPostRequest>() {
                                         @Override
@@ -90,6 +95,8 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
                                                 if (response.code() == 200) {
                                                     Log.i("Create Order Request", "post submitted to API." + response.body().getMessage());
                                                     Log.d("Order Response", "onResponse: " + response.body().getOrders().getStatus());
+                                                    Toast.makeText(context, "Order Cancelled", Toast.LENGTH_SHORT).show();
+                                                    notifyDataSetChanged();
                                                 }
                                             } else {
                                                 if (response.code() == 401) {
@@ -129,6 +136,7 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
 
     public void setAllOrders(List<Orders> allOrders) {
         this.allOrders = allOrders;
+        notifyDataSetChanged();
     }
 
     public class ViewOrderHolder extends RecyclerView.ViewHolder {

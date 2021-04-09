@@ -12,6 +12,9 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +25,7 @@ import com.encycode.sheetalfoods.helper.CategoryAdapter;
 import com.encycode.sheetalfoods.helper.GetSharedPreferences;
 import com.encycode.sheetalfoods.helper.request.Category;
 import com.encycode.sheetalfoods.helper.request.CategoryRequest;
+import com.encycode.sheetalfoods.viewmodels.CategoriesViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     private APIService mAPIService;
     private static List<Categories> categoriesList;
+    CategoriesViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.view_order_menu:
-                       Intent i = new Intent(MainActivity.this, ViewOrders.class);
-                       startActivity(i);
+                        Intent i = new Intent(MainActivity.this, ViewOrders.class);
+                        startActivity(i);
                         break;
 
                     case R.id.notification_menu:
@@ -71,18 +76,18 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.logout:
-                        GetSharedPreferences  loginShared = new GetSharedPreferences("LoginStatus",MainActivity.this);
-                        loginShared.setPrefString("name","");
-                        loginShared.setPrefString("username","");
-                        loginShared.setPrefString("role","");
-                        loginShared.setPrefString("shop_name","");
-                        loginShared.setPrefString("address","");
-                        loginShared.setPrefString("mobile","");
+                        GetSharedPreferences loginShared = new GetSharedPreferences("LoginStatus", MainActivity.this);
+                        loginShared.setPrefString("name", "");
+                        loginShared.setPrefString("username", "");
+                        loginShared.setPrefString("role", "");
+                        loginShared.setPrefString("shop_name", "");
+                        loginShared.setPrefString("address", "");
+                        loginShared.setPrefString("mobile", "");
                         loginShared.setPrefString("token", "");
-                        loginShared.setPrefString("token_type","");
-                        loginShared.setPrefString("expires_at","");
+                        loginShared.setPrefString("token_type", "");
+                        loginShared.setPrefString("expires_at", "");
                         loginShared.setPrefBoolean("isLogin", false);
-                        Intent k = new Intent(MainActivity.this,Login.class);
+                        Intent k = new Intent(MainActivity.this, Login.class);
                         startActivity(k);
                         break;
                 }
@@ -95,8 +100,15 @@ public class MainActivity extends AppCompatActivity {
         categoryRecyclerView = findViewById(R.id.categoryRecyclerView);
         categoryRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        categoriesList = new ArrayList<>();
-
+        CategoryAdapter adapter = new CategoryAdapter(this);
+        viewModel = ViewModelProviders.of(this).get(CategoriesViewModel.class);
+        viewModel.getAllCategories().observe(this, new Observer<List<Categories>>() {
+            @Override
+            public void onChanged(List<Categories> categories) {
+                adapter.setData(categories);
+            }
+        });
+        categoryRecyclerView.setAdapter(adapter);
 
         mAPIService.CategoryGetRequest().enqueue(new Callback<CategoryRequest>() {
             @Override
@@ -122,9 +134,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setDataAdapter(String name, String img, int status, String create, String update, String delete, int id) {
-        CategoryAdapter adapter = new CategoryAdapter(this);
-        categoriesList.add(new Categories(name, img, status == 1, create, update, delete, id));
-        adapter.setData(categoriesList);
-        categoryRecyclerView.setAdapter(adapter);
+        viewModel.insert(new Categories(name, img, status == 1, create, update, delete, id));
     }
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.encycode.sheetalfoods.entity.Orders;
+import com.encycode.sheetalfoods.helper.request.Order;
 import com.encycode.sheetalfoods.repositories.OrdersRepo;
 
 import java.util.List;
@@ -29,6 +30,8 @@ public class OrdersViewModel extends AndroidViewModel {
     public void delete(Orders orders) {
         repo.delete(orders);
     }
+
+    public void update(Orders orders) { repo.update(orders);}
 
     public LiveData<List<Orders>> getAllOrders() {
         return allOrders;

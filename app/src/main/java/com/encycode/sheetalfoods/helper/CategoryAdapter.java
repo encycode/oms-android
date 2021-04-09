@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.encycode.sheetalfoods.DealerCreateOrder;
@@ -72,6 +73,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     public void setData(List<Categories> categoriesList) {
         categories = categoriesList;
+        notifyDataSetChanged();
     }
 
     class CategoryHolder extends RecyclerView.ViewHolder {
