@@ -42,48 +42,53 @@
         android:layout_margin="20dp"
         android:orientation="vertical">
 
+
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/productType_dropdown"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginVertical="10dp"
-            android:hint="Select Products Type"
-            android:textColorHint="@color/buttonDefault"
             app:boxStrokeColor="@color/buttonDefault"
-            app:endIconMode="clear_text"
+            android:textColorHint="@color/buttonDefault"
+            app:hintTextColor="@color/buttonDefault"
+            android:hint="Select Products Type"
+            app:endIconMode="dropdown_menu"
             app:endIconTint="@color/buttonDefault"
-            app:hintTextColor="@color/buttonDefault">
+            app:startIconTint="@color/buttonDefault">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/selectProductTypeDropdown"
+            <AutoCompleteTextView
+                android:id="@+id/productTypeDropdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
+                android:dropDownHeight="300dp"
+                android:inputType="none"
                 android:textColor="@color/buttonDefault" />
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/products_dropdown"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginVertical="10dp"
-            android:hint="Select Products"
-            android:textColorHint="@color/buttonDefault"
             app:boxStrokeColor="@color/buttonDefault"
-            app:endIconMode="clear_text"
+            android:textColorHint="@color/buttonDefault"
+            app:hintTextColor="@color/buttonDefault"
+            android:hint="Select Products"
+            app:endIconMode="dropdown_menu"
             app:endIconTint="@color/buttonDefault"
-            app:hintTextColor="@color/buttonDefault">
+            app:startIconTint="@color/buttonDefault">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/selectProductDropdown"
+            <AutoCompleteTextView
+                android:id="@+id/productsDropdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
+                android:dropDownHeight="300dp"
+                android:inputType="none"
                 android:textColor="@color/buttonDefault" />
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -106,7 +111,6 @@
                 android:singleLine="true"
                 android:inputType="number"
                 android:textColor="@color/buttonDefault" />
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
