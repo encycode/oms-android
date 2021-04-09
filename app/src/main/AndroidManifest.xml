@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SheetalFoods">
-        <activity android:name=".OrderDetails"></activity>
+        <activity android:name=".EditOrderDetails"></activity>
+        <activity android:name=".OrderDetails" />
         <activity android:name=".Notifications" />
         <activity android:name=".ViewOrders" />
         <activity android:name=".DealerCreateOrder" />

@@ -2,6 +2,7 @@ package com.encycode.sheetalfoods.helper;
 
 import com.encycode.sheetalfoods.helper.request.CategoryRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsDeleteRequest;
+import com.encycode.sheetalfoods.helper.request.OrderDetailsEditRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsRequest;
 import com.encycode.sheetalfoods.helper.request.OrderPostRequest;
 import com.encycode.sheetalfoods.helper.request.OrderRequest;
@@ -13,6 +14,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 
@@ -53,5 +55,8 @@ public interface APIService {
     @DELETE("api/order-details/delete")
     Call<OrderDetailsDeleteRequest> OrderDetailsDeleteRequest(@Query("id") int id);
 
-
+    @Headers({"Accept: application/json"})
+    @FormUrlEncoded
+    @PUT("/api/order-details/edit")
+    Call<OrderDetailsEditRequest> OrderDetailsEditRequest(@Field("id") int id);
 }
