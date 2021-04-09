@@ -82,8 +82,10 @@ public class DealerCreateOrder extends AppCompatActivity {
                     if (response.code() == 200) {
                         Log.i("Create Order Request", "post submitted to API." + response.body().getMessage());
                         Log.d("Order Response", "onResponse: " + response.body().getOrders().getOrderNumber());
-                        dialogBoxDisplay("Order Place Successfully \n Your Order Number is : "+response.body().getOrders().getOrderNumber(),"Order",DealerCreateOrder.this);
                         viewModel.insert(new Orders(response.body().getOrders().getId(),response.body().getOrders().getSenderClientid(),response.body().getOrders().getReceiverClientid(),response.body().getOrders().getShopName(),response.body().getOrders().getAddress(),response.body().getOrders().getMobile(),response.body().getOrders().getOrderby(),response.body().getOrders().getCategoryId(),response.body().getOrders().getStatus(),response.body().getOrders().getOrderNumber(),response.body().getOrders().getUserId(),response.body().getOrders().getCreatedAt(),response.body().getOrders().getUpdatedAt(),response.body().getOrders().getDeletedAt()));
+                        dialogBoxDisplay("Order Place Successfully \n Your Order Number is : "+response.body().getOrders().getOrderNumber(),"Order",DealerCreateOrder.this);
+                        Intent i = new Intent(DealerCreateOrder.this,ViewOrders.class);
+                        startActivity(i);
                     }
                 } else {
                     if (response.code() == 401) {

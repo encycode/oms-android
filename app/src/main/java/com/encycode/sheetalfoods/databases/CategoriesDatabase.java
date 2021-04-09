@@ -12,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.encycode.sheetalfoods.dao.CategoriesDao;
 import com.encycode.sheetalfoods.entity.Categories;
 
-@Database(entities = Categories.class,version = 1)
+@Database(entities = Categories.class,version = 3)
 public abstract class CategoriesDatabase extends RoomDatabase {
 
     private static CategoriesDatabase instance;

@@ -11,7 +11,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.encycode.sheetalfoods.dao.ProductTypesDao;
 import com.encycode.sheetalfoods.entity.ProductTypes;
+import com.encycode.sheetalfoods.helper.request.ProductType;
 
+@Database(entities = ProductTypes.class,version = 1)
 public abstract class ProductTypesDatabase extends RoomDatabase {
     private static ProductTypesDatabase instance;
 

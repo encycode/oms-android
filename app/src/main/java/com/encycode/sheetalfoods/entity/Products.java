@@ -18,7 +18,7 @@ public class Products {
 
     private String image;
 
-    private boolean status;
+    private int status;
 
     @ColumnInfo(name = "caret_item")
     private int caretItem;
@@ -35,7 +35,8 @@ public class Products {
     @ColumnInfo(name = "deleted_at")
     private String deletedAt;
 
-    public Products(int productTypeID, String name, String image, boolean status, int caretItem, int caretPrice, String createdAt, String updatedAt, String deletedAt) {
+    public Products(int id,int productTypeID, String name, String image, int status, int caretItem, int caretPrice, String createdAt, String updatedAt, String deletedAt) {
+        this.id = id;
         this.productTypeID = productTypeID;
         this.name = name;
         this.image = image;
@@ -67,7 +68,7 @@ public class Products {
         return image;
     }
 
-    public boolean isStatus() {
+    public int getStatus() {
         return status;
     }
 

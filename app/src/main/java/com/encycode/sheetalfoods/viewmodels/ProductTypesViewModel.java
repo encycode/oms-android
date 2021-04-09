@@ -28,4 +28,8 @@ public class ProductTypesViewModel extends AndroidViewModel {
     public LiveData<List<ProductTypes>> getAllProductTypesForSpecificCategory(int categoryID) {
         return repo.getAllProductTypesForSpecificCategory(categoryID);
     }
+
+    public void insert(ProductTypes productTypes) {
+        repo.insert(productTypes);
+    }
 }

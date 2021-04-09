@@ -5,11 +5,8 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
-import com.encycode.sheetalfoods.dao.ProductTypesDao;
 import com.encycode.sheetalfoods.dao.ProductsDao;
-import com.encycode.sheetalfoods.databases.ProductTypesDatabase;
 import com.encycode.sheetalfoods.databases.ProductsDatabase;
-import com.encycode.sheetalfoods.entity.ProductTypes;
 import com.encycode.sheetalfoods.entity.Products;
 
 import java.util.List;
@@ -31,7 +28,11 @@ public class ProductsRepo {
         return allProducts;
     }
 
-     public LiveData<List<Products>> getAllProductsForSpecificProductType(int productID) {
+    public void insert(Products products) {
+        new InsertAsyncTask(dao).execute(products);
+    }
+
+    public LiveData<List<Products>> getAllProductsForSpecificProductType(int productID) {
         LiveData<List<Products>> products = null;
         try {
             products = new GetAllProductsForSpecificProductTypeASYNCTask(dao).execute(productID).get(20, TimeUnit.SECONDS);
@@ -45,7 +46,22 @@ public class ProductsRepo {
         return products;
     }
 
-    public class GetAllProductsForSpecificProductTypeASYNCTask extends AsyncTask<Integer,Void,LiveData<List<Products>>> {
+    public class InsertAsyncTask extends AsyncTask<Products, Void, Void> {
+
+        ProductsDao dao;
+
+        public InsertAsyncTask(ProductsDao dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Products... products) {
+            dao.insert(products[0]);
+            return null;
+        }
+    }
+
+    public class GetAllProductsForSpecificProductTypeASYNCTask extends AsyncTask<Integer, Void, LiveData<List<Products>>> {
 
         ProductsDao dao;
 

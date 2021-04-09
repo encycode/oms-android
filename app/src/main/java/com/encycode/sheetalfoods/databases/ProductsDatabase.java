@@ -10,8 +10,10 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.encycode.sheetalfoods.dao.ProductsDao;
+import com.encycode.sheetalfoods.entity.ProductTypes;
 import com.encycode.sheetalfoods.entity.Products;
 
+@Database(entities = Products.class,version = 4)
 public abstract class ProductsDatabase extends RoomDatabase {
     private static ProductsDatabase instance;
 

@@ -15,7 +15,7 @@ public class ProductTypes {
 
     private String name;
 
-    private boolean status;
+    private int status;
 
     @ColumnInfo(name = "created_at")
     private String createdAt;
@@ -26,7 +26,9 @@ public class ProductTypes {
     @ColumnInfo(name = "deleted_at")
     private String deletedAt;
 
-    public ProductTypes(String name, boolean status, String createdAt, String updatedAt, String deletedAt) {
+    public ProductTypes(int id, int categoryID, String name, int status, String createdAt, String updatedAt, String deletedAt) {
+        this.id = id;
+        this.categoryID = categoryID;
         this.name = name;
         this.status = status;
         this.createdAt = createdAt;
@@ -50,7 +52,7 @@ public class ProductTypes {
         return name;
     }
 
-    public boolean isStatus() {
+    public int getStatus() {
         return status;
     }
 

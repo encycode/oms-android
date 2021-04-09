@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.encycode.sheetalfoods.dao.ProductTypesDao;
 import com.encycode.sheetalfoods.databases.ProductTypesDatabase;
 import com.encycode.sheetalfoods.entity.ProductTypes;
+import com.encycode.sheetalfoods.helper.request.ProductType;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -41,6 +42,23 @@ public class ProductTypesRepo {
             e.printStackTrace();
         }
         return productTypes;
+    }
+
+    public void insert(ProductTypes productTypes) {
+        new InsertAsyncTask(dao).execute(productTypes);
+    }
+
+    public class InsertAsyncTask extends AsyncTask<ProductTypes,Void,Void> {
+        ProductTypesDao dao;
+
+        public InsertAsyncTask(ProductTypesDao dao) {
+            this.dao = dao;
+        }
+        @Override
+        protected Void doInBackground(ProductTypes... productTypes) {
+            dao.insert(productTypes[0]);
+            return null;
+        }
     }
 
     public class GetAllProductTypesForSpecificCategoryAsyncTask extends AsyncTask<Integer, Void, LiveData<List<ProductTypes>>> {

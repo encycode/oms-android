@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.encycode.sheetalfoods.entity.Categories;
+import com.encycode.sheetalfoods.entity.ProductTypes;
+import com.encycode.sheetalfoods.entity.Products;
 import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
 import com.encycode.sheetalfoods.helper.CategoryAdapter;
@@ -28,6 +30,8 @@ import com.encycode.sheetalfoods.helper.request.CategoryRequest;
 import com.encycode.sheetalfoods.helper.request.Product;
 import com.encycode.sheetalfoods.helper.request.ProductType;
 import com.encycode.sheetalfoods.viewmodels.CategoriesViewModel;
+import com.encycode.sheetalfoods.viewmodels.ProductTypesViewModel;
+import com.encycode.sheetalfoods.viewmodels.ProductsViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -47,12 +51,16 @@ public class MainActivity extends AppCompatActivity {
     private APIService mAPIService;
     private static List<Categories> categoriesList;
     CategoriesViewModel viewModel;
+    ProductsViewModel productsViewModel;
+    ProductTypesViewModel productTypesViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        productsViewModel = new ProductsViewModel(getApplication());
+        productTypesViewModel = new ProductTypesViewModel(getApplication());
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -143,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
                                     image + "\n" + status + "\n" + carat_item + "\n" + carat_price + "\n" + created_at + "\n" + updated_at + "\n"
                                     + deleted_at + "\n }"
                             );
+                            productsViewModel.insert(new Products(id,product_type_id,name,image,status,carat_item,carat_price,created_at,updated_at,deleted_at));
+
                         }
                         for (int i = 0; i < productTypeListResponse.size(); i++) {
                             int id = productTypeListResponse.get(i).getId().intValue();
@@ -156,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.i("Product Type Log", "onResponse: { \n" + id + "\n" + category_id + "\n" + name + "\n" + status + "\n" + created_at + "\n" + updated_at + "\n"
                                     + deleted_at + "\n }"
                             );
+                            productTypesViewModel.insert(new ProductTypes(id,category_id,name,status,created_at,updated_at,deleted_at));
                         }
                     }
                 }

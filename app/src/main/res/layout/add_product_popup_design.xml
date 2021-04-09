@@ -6,6 +6,7 @@
     android:layout_margin="30dp"
     android:showDividers="middle"
     android:divider="@color/buttonDefault"
+    android:background="@color/backgroundDefault"
     android:dividerPadding="5dp"
     android:orientation="vertical">
 
