@@ -27,13 +27,14 @@ public class Categories {
     @ColumnInfo(name = "deleted_at")
     private String deletedAt;
 
-    public Categories(String name, String image, boolean status, String createdAt, String updatedAt, String deletedAt) {
+    public Categories(String name, String image, boolean status, String createdAt, String updatedAt, String deletedAt,int id) {
         this.name = name;
         this.image = image;
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
+        this.id = id;
     }
 
     public void setId(int id) {

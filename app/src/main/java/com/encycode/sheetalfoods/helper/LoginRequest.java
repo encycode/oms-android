@@ -13,6 +13,15 @@ public class LoginRequest {
     @SerializedName("role")
     @Expose
     private String role;
+    @SerializedName("shop_name")
+    @Expose
+    private String shopName;
+    @SerializedName("address")
+    @Expose
+    private String address;
+    @SerializedName("mobile")
+    @Expose
+    private String mobile;
     @SerializedName("access_token")
     @Expose
     private String accessToken;
@@ -22,18 +31,6 @@ public class LoginRequest {
     @SerializedName("expires_at")
     @Expose
     private String expiresAt;
-
-    @SerializedName("message")
-    @Expose
-    private String message;
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public String getName() {
         return name;
@@ -57,6 +54,30 @@ public class LoginRequest {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public String getAccessToken() {

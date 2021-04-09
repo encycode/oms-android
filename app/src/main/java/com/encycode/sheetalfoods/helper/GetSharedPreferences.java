@@ -13,8 +13,9 @@ public class GetSharedPreferences extends Application  {
     public GetSharedPreferences() {
     }
     @SuppressLint("CommitPrefEdits")
-    public GetSharedPreferences(String prefName) {
-        prefs = getAppContext().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+    public GetSharedPreferences(String prefName,Context c) {
+        GetSharedPreferences.context = c;
+        prefs = context.getSharedPreferences(prefName, Context.MODE_PRIVATE);
         editorprefs=prefs.edit();
     }
 

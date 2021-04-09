@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         List<Category> categoryResponse = response.body().getCategories();
                         Log.d("Size of List", "onResponse: " + categoryResponse.size());
                         for (int i = 0; i < categoryResponse.size(); i++) {
-                            setDataAdapter(categoryResponse.get(i).getName(),categoryResponse.get(i).getImage(),categoryResponse.get(i).getStatus(),categoryResponse.get(i).getCreatedAt(),categoryResponse.get(i).getUpdatedAt(),categoryResponse.get(i).getDeletedAt());
+                            setDataAdapter(categoryResponse.get(i).getName(), categoryResponse.get(i).getImage(), categoryResponse.get(i).getStatus(), categoryResponse.get(i).getCreatedAt(), categoryResponse.get(i).getUpdatedAt(), categoryResponse.get(i).getDeletedAt(),categoryResponse.get(i).getId());
                         }
                     }
                 }
@@ -78,9 +78,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void setDataAdapter(String name,String img,int status,String create,String update,String delete) {
+    public void setDataAdapter(String name,String img,int status,String create,String update,String delete,int id) {
         CategoryAdapter adapter = new CategoryAdapter(this);
-        categoriesList.add(new Categories(name,img,status==1,create,update, delete));
+        categoriesList.add(new Categories(name,img,status==1,create,update, delete,id));
         adapter.setData(categoriesList);
         categoryRecyclerView.setAdapter(adapter);
     }

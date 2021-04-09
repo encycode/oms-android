@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.encycode.sheetalfoods.helper.APIError;
 import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
+import com.encycode.sheetalfoods.helper.GetSharedPreferences;
 import com.encycode.sheetalfoods.helper.LoginRequest;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
@@ -81,11 +82,20 @@ public class Login extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.code() == 200) {
                         Log.i("Login Status", "post submitted to API." + response.body().toString());
-//                        Toast.makeText(Login.this, response.body().getAccessToken(), Toast.LENGTH_SHORT).show();
-//                        dialogBoxDisplay(response.body().getAccessToken() + "\n" + response.body().getExpiresAt() + "\n" + response.body().getRole(), "Login Status", Login.this);
-                        myEdit.putBoolean("isLogin", true);
-                        myEdit.putString("token", response.body().getAccessToken());
-                        myEdit.commit();
+                        GetSharedPreferences loginShared = new GetSharedPreferences("LoginStatus",Login.this);
+                        loginShared.setPrefString("name",response.body().getName());
+                        loginShared.setPrefString("username",response.body().getUsername());
+                        loginShared.setPrefString("role",response.body().getRole());
+                        loginShared.setPrefString("shop_name",response.body().getShopName());
+                        loginShared.setPrefString("address",response.body().getAddress());
+                        loginShared.setPrefString("mobile",response.body().getMobile());
+                        loginShared.setPrefString("token", response.body().getAccessToken());
+                        loginShared.setPrefString("token_type",response.body().getTokenType());
+                        loginShared.setPrefString("expires_at",response.body().getExpiresAt());
+                        loginShared.setPrefBoolean("isLogin", true);
+
+                        Log.d("Shared Pref", "onResponse: " + loginShared.getPrefString("name"));
+
                         startActivity(i);
                         finish();
                     }
