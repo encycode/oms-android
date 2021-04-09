@@ -11,4 +11,6 @@
     <color name="cardViewDefault">#F1C6EB</color>
     <color name="buttonDefault">#E66BC3</color>
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#E66BC3</color>
+    <color name="green">#22B500</color>
+    <color name="red">#910000</color>
 </resources>

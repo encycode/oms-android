@@ -1,23 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundDefault"
     android:orientation="vertical"
+    tools:openDrawer="start"
+    android:id="@+id/drawer"
     tools:context=".MainActivity">
+    
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"/>
+        android:background="@color/buttonDefault"
+        app:title="Order Management"
+        app:titleTextColor="@color/white"
+        android:layout_marginBottom="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoryRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/category_recyclerview_design" />
+        android:layout_below="@id/toolbar"/>
 
-</LinearLayout>
+    </RelativeLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/nav_menu"
+        app:menu="@menu/main_menu"
+        android:backgroundTint="@color/cardViewDefault"
+        app:itemTextColor="@color/buttonDefault"
+        app:itemIconTint="@color/buttonDefault"
+        app:headerLayout="@layout/menu_header"
+        android:layout_gravity="start" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

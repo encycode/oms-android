@@ -6,7 +6,6 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.encycode.sheetalfoods.entity.OrderDetails;
 import com.encycode.sheetalfoods.entity.Orders;
 
 import java.util.List;
@@ -23,6 +22,6 @@ public interface OrdersDao {
     @Query("SELECT * FROM orders")
     LiveData<List<Orders>> getAllOrders();
 
-    @Query("SELECT * FROM orders WHERE id= :orderID")
+    @Query("SELECT * FROM orders WHERE id = :orderID")
     Orders getSpecificOrder(int orderID);
 }

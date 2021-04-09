@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.encycode.sheetalfoods.helper.APIError;
 import com.encycode.sheetalfoods.helper.APIService;
@@ -30,12 +31,20 @@ public class DealerCreateOrder extends AppCompatActivity {
     TextView shop_name, mobile, category;
     Button btnCreateOrder;
     Intent i;
+    Toolbar toolbar;
     private APIService mAPIService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dealer_create_order);
+
+        toolbar = findViewById(R.id.toolbar);
+        getSupportActionBar().hide();
+        toolbar.setTitle("Create Order");
+        toolbar.setTitleTextColor(getColor(R.color.white));
+        toolbar.setBackgroundColor(getColor(R.color.buttonDefault));
+        setActionBar(toolbar);
 
         shop_name = findViewById(R.id.shopNameTV);
         mobile = findViewById(R.id.mobileNoTV);

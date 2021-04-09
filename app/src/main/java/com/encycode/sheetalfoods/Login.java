@@ -39,11 +39,13 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         i = new Intent(Login.this, MainActivity.class);
         sh = getSharedPreferences("LoginStatus",MODE_PRIVATE);
         myEdit = sh.edit();
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+
+        getSupportActionBar().hide();
+
         if(sh.getBoolean("isLogin",false)) {
             startActivity(i);
             finish();

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/cardViewDefault"
+    app:cardCornerRadius="5dp"
+    android:layout_margin="10dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="8">
+
+            <ImageView
+                android:id="@+id/notificationImage"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="2"
+                android:src="@drawable/cone"
+                android:scaleType="fitXY"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="5"
+                android:text="Offer Offer Offer"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="23sp"
+                android:textColor="@color/buttonDefault"/>
+
+            <ImageButton
+                android:id="@+id/downBtn"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:src="@drawable/down"
+                android:layout_gravity="center"
+                android:tint="@color/buttonDefault"
+                android:background="#00000000"/>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notificationDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:layout_gravity="end"
+            android:textColor="@color/buttonDefault"
+            android:visibility="gone"
+            android:textSize="18sp"
+            android:text="
+@Jenix, mind you it's been a while since I last touched Android, but I believe the reason for doing fitXY is so that the image is stretched proportionally to fit the frame/view it was set in. Using FIT_CENTER sounds like it will just place the image in the center of the view but does not fill the view. I may be wrong, but you can experiment with either to find out what works – smac89 Aug 1 '17 at 15:19
+"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

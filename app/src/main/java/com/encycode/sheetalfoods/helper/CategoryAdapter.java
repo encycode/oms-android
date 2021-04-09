@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.encycode.sheetalfoods.DealerCreateOrder;
+import com.encycode.sheetalfoods.Login;
 import com.encycode.sheetalfoods.R;
 import com.encycode.sheetalfoods.StaffCreateOrder;
 import com.encycode.sheetalfoods.entity.Categories;
@@ -43,14 +44,22 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
         Categories current = categories.get(position);
         holder.title.setText(current.getName());
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(context, DealerCreateOrder.class);
-                Log.i("category Adapter id", "onClick: { " + current.getId() + "\n" + current.getName() + "\n }" );
-                i.putExtra("cat_id",current.getId());
-                i.putExtra("cat_name",current.getName());
-                context.startActivity(i);
+                GetSharedPreferences sh = new GetSharedPreferences("LoginStatus", context);
+                if(sh.getPrefString("role").equals("dealer")) {
+                    Intent i = new Intent(context, DealerCreateOrder.class);
+                    Log.i("category Adapter id", "onClick: { " + current.getId() + "\n" + current.getName() + "\n }" );
+                    i.putExtra("cat_id",current.getId());
+                    i.putExtra("cat_name",current.getName());
+                    context.startActivity(i);
+                } else if(sh.getPrefString("role").equals("staff")) {
+                    Intent i = new Intent(context,StaffCreateOrder.class);
+                    context.startActivity(i);
+                }
+
             }
         });
     }

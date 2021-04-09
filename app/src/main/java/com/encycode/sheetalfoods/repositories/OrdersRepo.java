@@ -38,17 +38,7 @@ public class OrdersRepo {
     }
 
     public Orders getSpecificOrder(int orderID) {
-        Orders orders = null;
-        try {
-          orders =   new GetSpecificOrder(dao).execute(orderID).get(20, TimeUnit.SECONDS);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        }
-        return orders;
+        return dao.getSpecificOrder(orderID);
     }
 
     public static class InsertAsyncTask extends AsyncTask<Orders,Void,Void> {
