@@ -1,11 +1,14 @@
 package com.encycode.sheetalfoods.helper;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +22,12 @@ import java.util.List;
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationHolder> {
 
     List<Notification> notifications = new ArrayList<>();
+    Context context;
+
+    public NotificationAdapter(Context context) {
+        this.context = context;
+    }
+
     @NonNull
     @Override
     public NotificationHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -36,10 +45,27 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.down.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(holder.desc.getVisibility() == View.GONE)
+                if(holder.desc.getVisibility() == View.GONE) {
                     holder.desc.setVisibility(View.VISIBLE);
-                if(holder.desc.getVisibility() == View.VISIBLE)
+                    holder.down.setImageResource(R.drawable.up_arrow);
+                }
+                else if(holder.desc.getVisibility() == View.VISIBLE) {
                     holder.desc.setVisibility(View.GONE);
+                    holder.down.setImageResource(R.drawable.down);
+                }
+            }
+        });
+        holder.click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(holder.desc.getVisibility() == View.GONE) {
+                    holder.desc.setVisibility(View.VISIBLE);
+                    holder.down.setImageResource(R.drawable.up_arrow);
+                }
+                else if(holder.desc.getVisibility() == View.VISIBLE) {
+                    holder.desc.setVisibility(View.GONE);
+                    holder.down.setImageResource(R.drawable.down);
+                }
             }
         });
     }
@@ -56,6 +82,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public class NotificationHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView title,desc;
+        LinearLayout click;
         ImageButton down;
         public NotificationHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +90,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             desc = itemView.findViewById(R.id.notificationDesc);
             title = itemView.findViewById(R.id.notificationTitle);
             down = itemView.findViewById(R.id.downBtn);
+            click = itemView.findViewById(R.id.click);
         }
     }
 }

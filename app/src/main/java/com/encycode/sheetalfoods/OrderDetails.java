@@ -2,6 +2,8 @@ package com.encycode.sheetalfoods;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -38,13 +40,15 @@ public class OrderDetails extends AppCompatActivity {
 
     Dialog addProduct;
     FloatingActionButton button;
-    List<Products> products = new ArrayList<>();
-    List<ProductTypes> productTypes = new ArrayList<>();
+    TextView caretItemglobal;
+    List<Products> productsList = new ArrayList<>();
+    List<ProductTypes> productTypesList = new ArrayList<>();
 
     ProductsViewModel productsViewModel;
     ProductTypesViewModel productTypesViewModel;
 
-   ArrayList<String> productsNames, productTypeNames;
+
+    int selectedProductTypeId, selectedProductId;
 
     private APIService mAPIService;
 
@@ -54,28 +58,12 @@ public class OrderDetails extends AppCompatActivity {
         setContentView(R.layout.activity_order_details);
         mAPIService = new ApiUtils(OrderDetails.this).getAPIService();
 
+
         productsViewModel = ViewModelProviders.of(this).get(ProductsViewModel.class);
-        productsViewModel.getAllProducts().observe(this, new Observer<List<Products>>() {
-            @Override
-            public void onChanged(List<Products> products) {
-                setProducts(products);
-            }
-        });
-
         productTypesViewModel = ViewModelProviders.of(this).get(ProductTypesViewModel.class);
-        productTypesViewModel.getAllProductTypes().observe(this, new Observer<List<ProductTypes>>() {
-            @Override
-            public void onChanged(List<ProductTypes> productTypes) {
-                setProductTypes(productTypes);
-            }
-        });
 
-        for (int i = 0; i < productTypes.size(); i++) {
-            productTypeNames.add(productTypes.get(i).getName());
-        }
-        for (int i = 0; i < products.size(); i++) {
-            productsNames.add(products.get(i).getName());
-        }
+
+        //Toast.makeText(this, products.size()+"", Toast.LENGTH_SHORT).show();
 
 
         button = findViewById(R.id.floatingActionButton);
@@ -83,27 +71,130 @@ public class OrderDetails extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ArrayList<String> productTypeNames;
+                ArrayList<Integer> productTypeIds;
+                ArrayList<String> productsNames = new ArrayList<>();
+                ArrayList<Integer> productsIds = new ArrayList<>();
+                productTypeNames = new ArrayList<>();
+                productTypeIds = new ArrayList<>();
+                productTypesViewModel.getAllProductTypes().observe(OrderDetails.this, new Observer<List<ProductTypes>>() {
+                    @Override
+                    public void onChanged(List<ProductTypes> productTypes) {
+                        for (int i = 0; i < productTypes.size(); i++) {
+                            productTypeNames.add(productTypes.get(i).getName());
+                            productTypeIds.add(productTypes.get(i).getId());
+                            productTypesList.add(productTypes.get(i));
+                        }
+                    }
+                });
                 AutoCompleteTextView productType, product;
                 EditText caretOrder;
                 TextView caretItem, totalItem;
                 addProduct = new Dialog(OrderDetails.this);
                 addProduct.setContentView(R.layout.add_product_popup_design);
+                totalItem = addProduct.findViewById(R.id.caretTotalItemTV);
+                caretOrder = addProduct.findViewById(R.id.caretCount);
                 addProduct.setCancelable(true);
+                caretItem = addProduct.findViewById(R.id.caretItemTV);
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                 lp.copyFrom(addProduct.getWindow().getAttributes());
                 lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                 addProduct.show();
                 addProduct.getWindow().setAttributes(lp);
 
-                ArrayAdapter<String> productAdapter = new ArrayAdapter<>(OrderDetails.this, R.layout.dropdown_item,productsNames);
-                ArrayAdapter<String> productTypesAdapter = new ArrayAdapter<>(OrderDetails.this, R.layout.dropdown_item,productTypeNames);
+                ArrayAdapter<String> productTypesAdapter = new ArrayAdapter<>(OrderDetails.this, R.layout.dropdown_item, productTypeNames);
 
                 productType = addProduct.findViewById(R.id.productTypeDropdown);
                 product = addProduct.findViewById(R.id.productsDropdown);
 
+                productType.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        for (int i = 0; i < productTypeNames.size(); i++) {
+                            if (productTypeNames.get(i).equals(productType.getText().toString())) {
+                                selectedProductTypeId = i+1;
+                                break;
+                            }
+                        }
+                        productsIds.clear();
+                        productsNames.clear();
+                        productsList.clear();
+                        productsViewModel.getAllProductsForSpecificProductType(selectedProductTypeId).observe(OrderDetails.this, new Observer<List<Products>>() {
+                            @Override
+                            public void onChanged(List<Products> products) {
+                                for (int i = 0; i < products.size(); i++) {
+                                    productsNames.add(products.get(i).getName());
+                                    productsIds.add(products.get(i).getId());
+                                    productsList.add(products.get(i));
+                                }
+                            }
+                        });
+                    }
+                });
+
+
+                ArrayAdapter<String> productAdapter = new ArrayAdapter<>(OrderDetails.this, R.layout.dropdown_item, productsNames);
+
                 productType.setAdapter(productTypesAdapter);
                 product.setAdapter(productAdapter);
+
+                product.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        for (int i = 0; i < productsNames.size(); i++) {
+                            if (productsNames.get(i).equals(product.getText().toString())) {
+                                selectedProductId = i;
+                                break;
+                            }
+                        }
+                        caretItem.setText(productsList.get(selectedProductId).getCaretItem() + "");
+                    }
+
+                });
+
+                caretOrder.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if(!caretOrder.getText().toString().equals("")) {
+                            int count = Integer.valueOf(caretOrder.getText().toString());
+                            int productCount = productsList.get(selectedProductId).getCaretItem() * count;
+                            totalItem.setText(productCount + "");
+                        } else {
+                            totalItem.setText("0");
+                        }
+                    }
+                });
 
 
             }
@@ -168,13 +259,5 @@ public class OrderDetails extends AppCompatActivity {
             }
 
         });
-    }
-
-    public void setProducts(List<Products> products) {
-        this.products = products;
-    }
-
-    public void setProductTypes(List<ProductTypes> productTypes) {
-        this.productTypes = productTypes;
     }
 }

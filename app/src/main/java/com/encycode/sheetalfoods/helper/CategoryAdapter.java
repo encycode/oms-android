@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.encycode.sheetalfoods.DealerCreateOrder;
 import com.encycode.sheetalfoods.Login;
 import com.encycode.sheetalfoods.R;
@@ -46,6 +47,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         Categories current = categories.get(position);
         holder.title.setText(current.getName());
 
+        Glide.with(context)
+                .load(current.getImage())
+                .into(holder.image);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

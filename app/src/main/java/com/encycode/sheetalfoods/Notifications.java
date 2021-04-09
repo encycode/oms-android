@@ -31,7 +31,7 @@ public class Notifications extends AppCompatActivity {
         notifications.add(new Notification("","Offer 4","A paragraph is a series of related sentences developing a central idea, called the topic. Try to think about paragraphs in terms of thematic unity: a paragraph is a sentence or a group of sentences that supports one central, unified idea. Paragraphs add one idea at a time to your broader argument."));
         notifications.add(new Notification("","Offer 5","A paragraph is a series of related sentences developing a central idea, called the topic. Try to think about paragraphs in terms of thematic unity: a paragraph is a sentence or a group of sentences that supports one central, unified idea. Paragraphs add one idea at a time to your broader argument."));
 
-        NotificationAdapter adapter = new NotificationAdapter();
+        NotificationAdapter adapter = new NotificationAdapter(this);
         adapter.setNotifications(notifications);
 
         recyclerView.setAdapter(adapter);
