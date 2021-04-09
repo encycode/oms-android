@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="30dp"
+    android:showDividers="middle"
+    android:divider="@color/buttonDefault"
+    android:dividerPadding="5dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:text="Add Product"
+            android:textStyle="bold"
+            android:textColor="@color/buttonDefault"
+            android:textSize="25sp"
+            android:paddingLeft="20dp"
+            android:gravity="center_vertical"/>
+
+        <ImageButton
+            android:id="@+id/closeBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/close"
+            android:background="#00000000"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:hint="Select Products Type"
+            android:textColorHint="@color/buttonDefault"
+            app:boxStrokeColor="@color/buttonDefault"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/buttonDefault"
+            app:hintTextColor="@color/buttonDefault">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/selectProductTypeDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/buttonDefault" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:hint="Select Products"
+            android:textColorHint="@color/buttonDefault"
+            app:boxStrokeColor="@color/buttonDefault"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/buttonDefault"
+            app:hintTextColor="@color/buttonDefault">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/selectProductDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/buttonDefault" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:hint="Enter Product Count"
+            android:textColorHint="@color/buttonDefault"
+            app:boxStrokeColor="@color/buttonDefault"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/buttonDefault"
+            app:hintTextColor="@color/buttonDefault">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/caretCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:inputType="number"
+                android:textColor="@color/buttonDefault" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:weightSum="2">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Caret Count"
+                android:textSize="18sp"
+                android:textColor="@color/buttonDefault"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Product Count"
+                android:textSize="18sp"
+                android:textColor="@color/buttonDefault"
+                android:textStyle="bold"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/caretItemTV"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="12"
+                android:textSize="20sp"
+                android:textColor="@color/buttonDefault"
+                android:textStyle="bold"
+                android:background="@drawable/rounded"
+                android:layout_margin="25dp"/>
+
+            <TextView
+                android:id="@+id/caretTotalItemTV"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="36"
+                android:textSize="20sp"
+                android:textColor="@color/buttonDefault"
+                android:textStyle="bold"
+                android:background="@drawable/rounded"
+                android:layout_margin="25dp"/>
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/addBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="50dp"
+            android:text="Add!"
+            android:backgroundTint="@color/buttonDefault"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+</LinearLayout>

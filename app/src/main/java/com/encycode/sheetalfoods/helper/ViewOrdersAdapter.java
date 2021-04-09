@@ -17,11 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.encycode.sheetalfoods.ConfirmOrder;
-import com.encycode.sheetalfoods.DealerCreateOrder;
 import com.encycode.sheetalfoods.R;
 import com.encycode.sheetalfoods.entity.Orders;
-import com.encycode.sheetalfoods.helper.request.Order;
 import com.encycode.sheetalfoods.helper.request.OrderPostRequest;
 import com.encycode.sheetalfoods.viewmodels.OrdersViewModel;
 import com.google.gson.Gson;
@@ -123,8 +120,8 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(context, ConfirmOrder.class);
-                context.startActivity(i);
+//                Intent i = new Intent(context, ConfirmOrder.class);
+//                context.startActivity(i);
             }
         });
     }
