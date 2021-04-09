@@ -1,6 +1,7 @@
 package com.encycode.sheetalfoods.helper;
 
 import com.encycode.sheetalfoods.helper.request.CategoryRequest;
+import com.encycode.sheetalfoods.helper.request.OrderDetailsRequest;
 import com.encycode.sheetalfoods.helper.request.OrderPostRequest;
 import com.encycode.sheetalfoods.helper.request.OrderRequest;
 
@@ -36,6 +37,12 @@ public interface APIService {
     Call<OrderPostRequest> OrderPostRequest(@Field("orderby") String orderby,
                                             @Field("category") int category);
 
+    @Headers({"Accept: application/json"})
+    @FormUrlEncoded
+    @POST("api/order-details")
+    Call<OrderDetailsRequest> OrderDetailsPostRequest(@Field("order") int order ,
+                                               @Field("product") int product,
+                                               @Field("carat_order") int carat_order);
 
     @Headers({"Accept: application/json"})
     @DELETE("api/orders/delete")

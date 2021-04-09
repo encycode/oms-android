@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.encycode.sheetalfoods.OrderDetails;
 import com.encycode.sheetalfoods.R;
 import com.encycode.sheetalfoods.entity.Orders;
 import com.encycode.sheetalfoods.helper.request.OrderPostRequest;
@@ -120,8 +121,8 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent i = new Intent(context, ConfirmOrder.class);
-//                context.startActivity(i);
+                Intent i = new Intent(context, OrderDetails.class);
+                context.startActivity(i);
             }
         });
     }
