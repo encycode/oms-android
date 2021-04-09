@@ -4,17 +4,17 @@ package com.encycode.sheetalfoods.helper.request;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Category {
+public class ProductType {
 
     @SerializedName("id")
     @Expose
     private Long id;
+    @SerializedName("category_id")
+    @Expose
+    private Long categoryId;
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("image")
-    @Expose
-    private String image;
     @SerializedName("status")
     @Expose
     private Long status;
@@ -36,20 +36,20 @@ public class Category {
         this.id = id;
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public Long getStatus() {
