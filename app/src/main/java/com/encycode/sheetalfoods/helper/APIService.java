@@ -1,6 +1,7 @@
 package com.encycode.sheetalfoods.helper;
 
 import com.encycode.sheetalfoods.helper.request.CategoryRequest;
+import com.encycode.sheetalfoods.helper.request.OrderDetailsDeleteRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsRequest;
 import com.encycode.sheetalfoods.helper.request.OrderPostRequest;
 import com.encycode.sheetalfoods.helper.request.OrderRequest;
@@ -47,6 +48,10 @@ public interface APIService {
     @Headers({"Accept: application/json"})
     @DELETE("api/orders/delete")
     Call<OrderPostRequest> OrderDeleteRequest(@Query("id") int id);
+
+    @Headers({"Accept: application/json"})
+    @DELETE("api/order-details/delete")
+    Call<OrderDetailsDeleteRequest> OrderDetailsDeleteRequest(@Query("id") int id);
 
 
 }
