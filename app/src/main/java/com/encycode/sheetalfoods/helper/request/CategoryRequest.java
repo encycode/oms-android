@@ -15,12 +15,23 @@ public class CategoryRequest {
     @SerializedName("products")
     @Expose
     private List<Product> products = null;
+    @SerializedName("users")
+    @Expose
+    private List<UsersResponse> users = null;
     @SerializedName("message")
     @Expose
     private String message;
 
     public List<Category> getCategories() {
         return categories;
+    }
+
+    public List<UsersResponse> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UsersResponse> users) {
+        this.users = users;
     }
 
     public void setCategories(List<Category> categories) {

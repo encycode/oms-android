@@ -29,6 +29,7 @@ import com.encycode.sheetalfoods.helper.request.Category;
 import com.encycode.sheetalfoods.helper.request.CategoryRequest;
 import com.encycode.sheetalfoods.helper.request.Product;
 import com.encycode.sheetalfoods.helper.request.ProductType;
+import com.encycode.sheetalfoods.helper.request.UsersResponse;
 import com.encycode.sheetalfoods.viewmodels.CategoriesViewModel;
 import com.encycode.sheetalfoods.viewmodels.ProductTypesViewModel;
 import com.encycode.sheetalfoods.viewmodels.ProductsViewModel;
@@ -130,9 +131,11 @@ public class MainActivity extends AppCompatActivity {
                         List<Category> categoryResponse = response.body().getCategories();
                         List<Product> productListResponse = response.body().getProducts();
                         List<ProductType> productTypeListResponse = response.body().getProductTypes();
+                        List<UsersResponse> UserListResponse = response.body().getUsers();
                         Log.d("Size Category List ", "onResponse: " + categoryResponse.size());
                         Log.d("Size Product List ", "onResponse: " + productListResponse.size());
                         Log.d("Size Product Type List", "onResponse: " + productTypeListResponse.size());
+                        Log.d("Size Users List", "onResponse: " + UserListResponse.size());
                         for (int i = 0; i < categoryResponse.size(); i++) {
                             setDataAdapter(categoryResponse.get(i).getName(), categoryResponse.get(i).getImage(), categoryResponse.get(i).getStatus().intValue(), categoryResponse.get(i).getCreatedAt(), categoryResponse.get(i).getUpdatedAt(), categoryResponse.get(i).getDeletedAt(), categoryResponse.get(i).getId().intValue());
                         }
