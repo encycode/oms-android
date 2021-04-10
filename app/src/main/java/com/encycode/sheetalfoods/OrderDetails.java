@@ -206,6 +206,7 @@ public class OrderDetails extends AppCompatActivity {
 
                     @Override
                     public void afterTextChanged(Editable s) {
+                        productType.clearFocus();
                         for (int i = 0; i < productTypeNames.size(); i++) {
                             if (productTypeNames.get(i).equals(productType.getText().toString())) {
                                 selectedProductTypeId = i + 1;
@@ -228,6 +229,13 @@ public class OrderDetails extends AppCompatActivity {
                     }
                 });
 
+                productType.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        productType.clearFocus();
+                    }
+                });
+
 
                 ArrayAdapter<String> productAdapter = new ArrayAdapter<>(OrderDetails.this, R.layout.dropdown_item, productsNames);
 
@@ -247,6 +255,7 @@ public class OrderDetails extends AppCompatActivity {
 
                     @Override
                     public void afterTextChanged(Editable s) {
+                        product.clearFocus();
                         for (int i = 0; i < productsNames.size(); i++) {
                             if (productsNames.get(i).equals(product.getText().toString())) {
                                 selectedProductId = i;
@@ -256,6 +265,13 @@ public class OrderDetails extends AppCompatActivity {
                         caretItem.setText(productsList.get(selectedProductId).getCaretItem() + "");
                     }
 
+                });
+
+                product.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        product.clearFocus();
+                    }
                 });
 
                 caretOrder.addTextChangedListener(new TextWatcher() {

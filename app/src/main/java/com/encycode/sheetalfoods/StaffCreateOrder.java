@@ -97,16 +97,17 @@ public class StaffCreateOrder extends AppCompatActivity {
         dealerName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                dealerName.clearFocus();
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                dealerName.clearFocus();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                dealerName.clearFocus();
                 for(int i=0;i<dealerNames.size();i++) {
                     if(s.toString().equals(dealerNames.get(i))) {
                         dealerId = i;
@@ -128,10 +129,23 @@ public class StaffCreateOrder extends AppCompatActivity {
             }
         });
 
+        dealerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                {
+                    dealerName.clearFocus();
+                }
+            }
+        });
+
         btnCreateStaffOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendPost(dealerId, shopName.getText().toString(), address.getText().toString(), mobile.getText().toString(), "staff", catId);
+                Intent i = new Intent(StaffCreateOrder.this,ViewOrders.class);
+                startActivity(i);
+                finish();
             }
         });
     }
