@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
         TextView role = view.findViewById(R.id.userRole);
 
         GetSharedPreferences loginShared = new GetSharedPreferences("LoginStatus",MainActivity.this);
-        name.setText(loginShared.getPrefString("name"));
-        role.setText(loginShared.getPrefString("role"));
+        name.setText(loginShared.getPrefString("name").toUpperCase());
+        role.setText(loginShared.getPrefString("role").toUpperCase());
 
         nav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
