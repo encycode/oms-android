@@ -24,6 +24,7 @@ import com.encycode.sheetalfoods.entity.Categories;
 import com.encycode.sheetalfoods.entity.OrderDetails;
 import com.encycode.sheetalfoods.entity.ProductTypes;
 import com.encycode.sheetalfoods.entity.Products;
+import com.encycode.sheetalfoods.entity.Users;
 import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
 import com.encycode.sheetalfoods.helper.CategoryAdapter;
@@ -39,6 +40,7 @@ import com.encycode.sheetalfoods.viewmodels.CategoriesViewModel;
 import com.encycode.sheetalfoods.viewmodels.OrderDetailsViewModel;
 import com.encycode.sheetalfoods.viewmodels.ProductTypesViewModel;
 import com.encycode.sheetalfoods.viewmodels.ProductsViewModel;
+import com.encycode.sheetalfoods.viewmodels.UsersViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     ProductsViewModel productsViewModel;
     ProductTypesViewModel productTypesViewModel;
     OrderDetailsViewModel orderDetailsViewModel;
-
+    UsersViewModel usersViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer);
         nav = findViewById(R.id.nav_menu);
 
+        usersViewModel = new UsersViewModel(getApplication());
         orderDetailsViewModel = new OrderDetailsViewModel(getApplication());
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_start, R.string.nav_close);
         drawerLayout.addDrawerListener(toggle);
@@ -189,6 +192,9 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Size Product List ", "onResponse: " + productListResponse.size());
                         Log.d("Size Product Type List", "onResponse: " + productTypeListResponse.size());
                         Log.d("Size Users List", "onResponse: " + UserListResponse.size());
+                        for(int i=0;i<UserListResponse.size();i++) {
+                            usersViewModel.insert(new Users(UserListResponse.get(i).getId().intValue(),UserListResponse.get(i).getName(),UserListResponse.get(i).getShopName(),UserListResponse.get(i).getAddress(),UserListResponse.get(i).getMobile(),"role"));
+                        }
                         for (int i = 0; i < categoryResponse.size(); i++) {
                             setDataAdapter(categoryResponse.get(i).getName(), categoryResponse.get(i).getImage(), categoryResponse.get(i).getStatus().intValue(), categoryResponse.get(i).getCreatedAt(), categoryResponse.get(i).getUpdatedAt(), categoryResponse.get(i).getDeletedAt(), categoryResponse.get(i).getId().intValue());
                         }
