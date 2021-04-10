@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.encycode.sheetalfoods.entity.Categories;
+import com.encycode.sheetalfoods.entity.OrderDetails;
 import com.encycode.sheetalfoods.entity.ProductTypes;
 import com.encycode.sheetalfoods.entity.Products;
 import com.encycode.sheetalfoods.helper.APIService;
@@ -33,6 +36,7 @@ import com.encycode.sheetalfoods.helper.request.Product;
 import com.encycode.sheetalfoods.helper.request.ProductType;
 import com.encycode.sheetalfoods.helper.request.UsersResponse;
 import com.encycode.sheetalfoods.viewmodels.CategoriesViewModel;
+import com.encycode.sheetalfoods.viewmodels.OrderDetailsViewModel;
 import com.encycode.sheetalfoods.viewmodels.ProductTypesViewModel;
 import com.encycode.sheetalfoods.viewmodels.ProductsViewModel;
 import com.google.android.material.navigation.NavigationView;
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     CategoriesViewModel viewModel;
     ProductsViewModel productsViewModel;
     ProductTypesViewModel productTypesViewModel;
+    OrderDetailsViewModel orderDetailsViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +75,19 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer);
         nav = findViewById(R.id.nav_menu);
 
+        orderDetailsViewModel = new OrderDetailsViewModel(getApplication());
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_start, R.string.nav_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        View view = nav.inflateHeaderView(R.layout.menu_header);
+
+        TextView name = view.findViewById(R.id.userName);
+        TextView role = view.findViewById(R.id.userRole);
+
+        GetSharedPreferences loginShared = new GetSharedPreferences("LoginStatus",MainActivity.this);
+        name.setText(loginShared.getPrefString("name"));
+        role.setText(loginShared.getPrefString("role"));
 
         nav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -126,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         mAPIService.OrderDetailsGetRequest().enqueue(new Callback<OrderDetailsShowRequest>() {
             @Override
             public void onResponse(Call<OrderDetailsShowRequest> call, Response<OrderDetailsShowRequest> response) {
-                Toast.makeText(MainActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 if (response.isSuccessful()) {
                     if (response.code() == 200) {
                         Log.d("cat", "onResponse: " + response.body().getMessage());
@@ -136,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("Order DEtails List", "onResponse: " + orderDetailsShowList.get(i).getOrderId());
                             Log.d("Order DEtails List", "onResponse: " + orderDetailsShowList.get(i).getCaratOrder());
                             Log.d("Order DEtailsList", "onResponse: " + orderDetailsShowList.get(i).getProductId());
+                            orderDetailsViewModel.insert(new OrderDetails(orderDetailsShowList.get(i).getId().intValue(),orderDetailsShowList.get(i).getOrderId().intValue(),orderDetailsShowList.get(i).getCaratOrder().intValue(),orderDetailsShowList.get(i).getCaratOrder().intValue(),orderDetailsShowList.get(i).getProductId().intValue()));
                         }
                     }
                     if (response.code() == 201){
@@ -146,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("Order DEtails List", "onResponse: " + orderDetailsShowList.get(i).getOrderId());
                             Log.d("Order DEtails List", "onResponse: " + orderDetailsShowList.get(i).getCaratOrder());
                             Log.d("Order DEtailsList", "onResponse: " + orderDetailsShowList.get(i).getProductId());
+                            orderDetailsViewModel.insert(new OrderDetails(orderDetailsShowList.get(i).getId().intValue(),orderDetailsShowList.get(i).getOrderId().intValue(),orderDetailsShowList.get(i).getCaratOrder().intValue(),orderDetailsShowList.get(i).getCaratPrice().intValue(),orderDetailsShowList.get(i).getProductId().intValue()));
                         }
                     }
                 }
@@ -160,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         mAPIService.CategoryGetRequest().enqueue(new Callback<CategoryRequest>() {
             @Override
             public void onResponse(Call<CategoryRequest> call, Response<CategoryRequest> response) {
-                Toast.makeText(MainActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 if (response.isSuccessful()) {
                     if (response.code() == 200) {
                         Log.d("cat", "onResponse: " + response.body().getMessage());

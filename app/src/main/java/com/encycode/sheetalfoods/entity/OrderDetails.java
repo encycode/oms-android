@@ -19,10 +19,19 @@ public class OrderDetails {
     @ColumnInfo(name = "caret_price")
     private int caretPrice;
 
-    public OrderDetails(int orderID, int caretOrder, int caretPrice) {
+    @ColumnInfo(name = "product_id")
+    private int productId;
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public OrderDetails(int id, int orderID, int caretOrder, int caretPrice, int productId) {
+        this.id = id;
         this.orderID = orderID;
         this.caretOrder = caretOrder;
         this.caretPrice = caretPrice;
+        this.productId = productId;
     }
 
     public void setId(int id) {

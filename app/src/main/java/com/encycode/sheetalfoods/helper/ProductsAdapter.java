@@ -13,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,15 +35,17 @@ import retrofit2.Response;
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductHolder> {
 
     Context context;
-    int orderId;
+    int productId;
     private APIService mAPIService;
     List<com.encycode.sheetalfoods.entity.OrderDetails> orderDetails = new ArrayList<>();
     List<Products> productsFinal = new ArrayList<>();
+    Products productsGet;
     ProductsViewModel productsViewModel;
     OrderDetailsViewModel orderDetailsViewModel;
-    public ProductsAdapter(Context context,int orderId) {
+
+    public ProductsAdapter(Context context, int productId) {
         this.context = context;
-        this.orderId = orderId;
+        this.productId = productId;
     }
 
     @NonNull
@@ -55,27 +56,26 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         mAPIService = new ApiUtils(context).getAPIService();
         orderDetailsViewModel = new OrderDetailsViewModel((Application) context.getApplicationContext());
         productsViewModel = ViewModelProviders.of((FragmentActivity) context).get(ProductsViewModel.class);
-        productsViewModel.getSpecificProduct(orderId).observe((LifecycleOwner) context, new Observer<List<Products>>() {
-            @Override
-            public void onChanged(List<Products> products) {
-                for(int i=0;i<products.size();i++) {
-                    productsFinal.add(products.get(i));
-                }
-            }
-        });
+
         return new ProductHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProductHolder holder, int position) {
 
-        holder.productName.setText(productsFinal.get(0).getName());
-        holder.caretItems.setText(productsFinal.get(0).getCaretItem());
-        holder.caretOrder.setText(orderDetails.get(position).getCaretOrder());
+        productsViewModel.getSpecificProduct(orderDetails.get(position).getProductId()).observe((LifecycleOwner) context, new Observer<List<Products>>() {
+            @Override
+            public void onChanged(List<Products> products) {
+                //Toast.makeText(context, "products "+products.size(), Toast.LENGTH_SHORT).show();
+                holder.productName.setText(products.get(0).getName());
+                holder.caretItems.setText(String.valueOf(products.get(0).getCaretItem()));
+            }
+        });
+        holder.caretOrder.setText(String.valueOf(orderDetails.get(position).getCaretOrder()));
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteOrderDetetails(orderDetails.get(position).getId(),orderDetails.get(position));
+                deleteOrderDetetails(orderDetails.get(position).getId(), orderDetails.get(position));
             }
         });
     }
@@ -91,8 +91,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     public class ProductHolder extends RecyclerView.ViewHolder {
 
-        TextView productName,caretItems,caretOrder;
+        TextView productName, caretItems, caretOrder;
         ImageButton delete;
+
         public ProductHolder(@NonNull View itemView) {
             super(itemView);
             productName = itemView.findViewById(R.id.productNameTV);
@@ -102,8 +103,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         }
     }
 
-    public void deleteOrderDetetails(int id,OrderDetails orderDetails) {
-        orderDetailsViewModel.delete(orderDetails);
+    public void deleteOrderDetetails(int id, OrderDetails orderDetails1) {
+        orderDetailsViewModel.delete(orderDetails1);
+        if(orderDetails.contains(orderDetails1))
+        {
+            orderDetails.remove(orderDetails1);
+        }
+        notifyDataSetChanged();
         mAPIService.OrderDetailsDeleteRequest(id).enqueue(new Callback<OrderDetailsDeleteRequest>() {
             @Override
             public void onResponse(Call<OrderDetailsDeleteRequest> call, Response<OrderDetailsDeleteRequest> response) {

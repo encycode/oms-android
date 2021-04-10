@@ -23,11 +23,19 @@
         app:titleTextColor="@color/white"
         android:layout_marginBottom="10dp"/>
 
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_below="@id/toolbar"
+            android:src="@drawable/sheetal_logo"
+            android:layout_margin="20dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoryRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@id/logo"/>
 
     </RelativeLayout>
 
@@ -39,7 +47,6 @@
         android:backgroundTint="@color/cardViewDefault"
         app:itemTextColor="@color/buttonDefault"
         app:itemIconTint="@color/buttonDefault"
-        app:headerLayout="@layout/menu_header"
         android:layout_gravity="start" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

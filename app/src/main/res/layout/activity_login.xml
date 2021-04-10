@@ -10,13 +10,13 @@
     android:weightSum="3"
     tools:context=".Login">
 
-<!--    <ImageView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_margin="30dp"-->
-<!--        android:layout_weight="1"-->
-<!--        android:src="@drawable/logo"-->
-<!--        app:tint="@color/buttonDefault" />-->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="30dp"
+        android:layout_weight="1"
+        android:src="@drawable/sheetal_logo"
+        app:tint="@color/buttonDefault" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

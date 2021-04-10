@@ -127,4 +127,7 @@ public class Orders implements Serializable {
         return deletedAt;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

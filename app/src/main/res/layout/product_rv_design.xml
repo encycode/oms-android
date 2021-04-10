@@ -46,7 +46,7 @@
         android:gravity="center"
         android:src="@drawable/remove"
         android:tint="#EC0202"
-        android:background="#00000000"/>
+        android:background="@color/white"/>
 
 
 </LinearLayout>

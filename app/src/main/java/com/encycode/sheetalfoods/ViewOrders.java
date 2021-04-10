@@ -72,7 +72,7 @@ public class ViewOrders extends AppCompatActivity {
         mAPIService.OrderGetRequest().enqueue(new Callback<OrderRequest>() {
             @Override
             public void onResponse(Call<OrderRequest> call, Response<OrderRequest> response) {
-                Toast.makeText(ViewOrders.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ViewOrders.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 if (response.isSuccessful()) {
                     if (response.code() == 200) {
                         List<Order> ordersResponse = response.body().getOrders();

@@ -12,7 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SheetalFoods">
-        <activity android:name=".EditOrderDetails"></activity>
+        <activity android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".OrderDetails" />
         <activity android:name=".Notifications" />
         <activity android:name=".ViewOrders" />
@@ -21,13 +27,7 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/No.Theme.SheetalFoods" />
-        <activity android:name=".Login">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Login" />
     </application>
 
 </manifest>

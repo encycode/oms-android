@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -28,10 +29,10 @@ import com.encycode.sheetalfoods.helper.APIError;
 import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
 import com.encycode.sheetalfoods.helper.ProductsAdapter;
-import com.encycode.sheetalfoods.helper.request.Order;
-import com.encycode.sheetalfoods.helper.request.OrderDetailsDeleteRequest;
+import com.encycode.sheetalfoods.helper.request.OrderDetailsEditRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsRequest;
 import com.encycode.sheetalfoods.viewmodels.OrderDetailsViewModel;
+import com.encycode.sheetalfoods.viewmodels.OrdersViewModel;
 import com.encycode.sheetalfoods.viewmodels.ProductTypesViewModel;
 import com.encycode.sheetalfoods.viewmodels.ProductsViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -48,8 +49,10 @@ public class OrderDetails extends AppCompatActivity {
 
     Dialog addProduct;
     FloatingActionButton button;
-    TextView caretItemglobal;
+    TextView orderNumberTv, shopNameTv, orderStatusTv;
     List<Products> productsList = new ArrayList<>();
+    Button confirm;
+    Toolbar toolbar;
     List<ProductTypes> productTypesList = new ArrayList<>();
 
     ProductsViewModel productsViewModel;
@@ -57,9 +60,10 @@ public class OrderDetails extends AppCompatActivity {
     OrderDetailsViewModel orderDetailsViewModel;
 
     RecyclerView recyclerView;
-    List<com.encycode.sheetalfoods.entity.OrderDetails> orderDetailsFinal;
+    List<com.encycode.sheetalfoods.entity.OrderDetails> orderDetailsFinal = new ArrayList<>();
 
     Orders currentOrder;
+    OrdersViewModel ordersViewModel;
 
     int selectedProductTypeId, selectedProductId;
 
@@ -72,6 +76,10 @@ public class OrderDetails extends AppCompatActivity {
 
 
 
+        mAPIService = new ApiUtils(this).getAPIService();
+
+
+        ordersViewModel = new OrdersViewModel(getApplication());
 
         productsViewModel = ViewModelProviders.of(this).get(ProductsViewModel.class);
         productTypesViewModel = ViewModelProviders.of(this).get(ProductTypesViewModel.class);
@@ -80,31 +88,59 @@ public class OrderDetails extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
+        orderNumberTv = findViewById(R.id.od_number);
+        orderStatusTv = findViewById(R.id.od_status);
+        shopNameTv = findViewById(R.id.od_shopName);
+        confirm = findViewById(R.id.confirm_button);
 
 
         //Toast.makeText(this, products.size()+"", Toast.LENGTH_SHORT).show();
 
         button = findViewById(R.id.floatingActionButton);
 
-        currentOrder =(Orders)getIntent().getSerializableExtra("currentOrder");
-
-
-
+        currentOrder = (Orders) getIntent().getSerializableExtra("currentOrder");
         orderDetailsViewModel = ViewModelProviders.of(this).get(OrderDetailsViewModel.class);
         orderDetailsViewModel.getSpecificOrderDetails(currentOrder.getId()).observe(this, new Observer<List<com.encycode.sheetalfoods.entity.OrderDetails>>() {
             @Override
             public void onChanged(List<com.encycode.sheetalfoods.entity.OrderDetails> orderDetails) {
-                Toast.makeText(OrderDetails.this, ""+currentOrder.getId(), Toast.LENGTH_SHORT).show();
-                for(int i=0;i<orderDetails.size();i++) {
-                    orderDetailsFinal.add(orderDetails.get(i));
-                }
+                //Toast.makeText(OrderDetails.this, "" + orderDetails.size(), Toast.LENGTH_SHORT).show();
+                orderDetailsFinal.addAll(orderDetails);
             }
         });
 
-        ProductsAdapter adapter = new ProductsAdapter(OrderDetails.this,currentOrder.getId());
+        toolbar = findViewById(R.id.toolbar);
+        getSupportActionBar().hide();
+        toolbar.setTitle("Order Number: "+currentOrder.getOrderNumber());
+        toolbar.setTitleTextColor(getColor(R.color.white));
+        toolbar.setBackgroundColor(getColor(R.color.buttonDefault));
+        setActionBar(toolbar);
+
+        orderNumberTv.setText(currentOrder.getOrderNumber());
+        orderStatusTv.setText(currentOrder.getStatus());
+        shopNameTv.setText(currentOrder.getShopName());
+
+
+        ProductsAdapter adapter = new ProductsAdapter(OrderDetails.this, currentOrder.getId());
 //        Toast.makeText(this, ""+orderDetailsFinal.size(), Toast.LENGTH_SHORT).show();
-        //adapter.setOrderDetails(orderDetailsFinal);
-//        recyclerView.setAdapter(adapter);
+        adapter.setOrderDetails(orderDetailsFinal);
+        recyclerView.setAdapter(adapter);
+
+        if(currentOrder.getStatus().equals("Confirmed")) {
+            confirm.setVisibility(View.GONE);
+        } else
+            confirm.setVisibility(View.VISIBLE);
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToggleStatus(currentOrder.getId());
+                currentOrder.setStatus("Confirmed");
+                ordersViewModel.update(currentOrder);
+                recreate();
+            }
+        });
+
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,7 +208,7 @@ public class OrderDetails extends AppCompatActivity {
                     public void afterTextChanged(Editable s) {
                         for (int i = 0; i < productTypeNames.size(); i++) {
                             if (productTypeNames.get(i).equals(productType.getText().toString())) {
-                                selectedProductTypeId = i+1;
+                                selectedProductTypeId = i + 1;
                                 break;
                             }
                         }
@@ -235,7 +271,7 @@ public class OrderDetails extends AppCompatActivity {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if(!caretOrder.getText().toString().equals("")) {
+                        if (!caretOrder.getText().toString().equals("")) {
                             int count = Integer.valueOf(caretOrder.getText().toString());
                             int productCount = productsList.get(selectedProductId).getCaretItem() * count;
                             totalItem.setText(productCount + "");
@@ -247,8 +283,8 @@ public class OrderDetails extends AppCompatActivity {
                 add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        sendPost(currentOrder.getId(),productsList.get(selectedProductId).getId(),Integer.valueOf(caretOrder.getText().toString()));
-                        orderDetailsViewModel.insert(new com.encycode.sheetalfoods.entity.OrderDetails(currentOrder.getId(),productsList.get(selectedProductId).getId(),Integer.valueOf(caretOrder.getText().toString())));
+                        sendPost(currentOrder.getId(), productsList.get(selectedProductId).getId(), Integer.parseInt(caretOrder.getText().toString()));
+                        orderDetailsViewModel.insert(new com.encycode.sheetalfoods.entity.OrderDetails(1, currentOrder.getId(), Integer.parseInt(caretOrder.getText().toString()), productsList.get(selectedProductId).getCaretPrice(), productsList.get(selectedProductId).getId()));
                         addProduct.dismiss();
                     }
                 });
@@ -284,5 +320,31 @@ public class OrderDetails extends AppCompatActivity {
         });
     }
 
+    public void ToggleStatus(int order) {
+        mAPIService.OrderDetailsEditRequest(order).enqueue(new Callback<OrderDetailsEditRequest>() {
+            @Override
+            public void onResponse(Call<OrderDetailsEditRequest> call, Response<OrderDetailsEditRequest> response) {
+
+                if (response.isSuccessful()) {
+                    if (response.code() == 200) {
+                        Log.i("Create Order Request", "post submitted to API." + response.body().getMessage());
+                        Log.d("Order Response", "onResponse: " + response.body().getOrders().getStatus());
+                    }
+                } else {
+                    if (response.code() == 401) {
+                        APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
+                        Log.i("Create Order Request", "post submitted to API." + message.getMessage());
+                        Toast.makeText(OrderDetails.this, message.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OrderDetailsEditRequest> call, Throwable t) {
+                Log.e("error", t.getMessage());
+            }
+
+        });
+    }
 
 }
