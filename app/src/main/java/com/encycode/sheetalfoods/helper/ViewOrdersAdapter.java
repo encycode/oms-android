@@ -71,7 +71,7 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
         holder.orderOpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OrdersViewModel viewModel = new OrdersViewModel((Application)context.getApplicationContext());
+                OrdersViewModel viewModel = new OrdersViewModel((Application) context.getApplicationContext());
                 new AlertDialog.Builder(context)
                         .setTitle("Title")
                         .setMessage("Do you really want to " + btnStatus + "?")
@@ -81,8 +81,35 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 if (btnStatus.equals("reorder")) {
                                     //reorder
+                                    mAPIService = new ApiUtils(context).getAPIService();
+                                    mAPIService.OrderDeleteRequest(currentOrder.getId()).enqueue(new Callback<OrderPostRequest>() {
+                                        @Override
+                                        public void onResponse(Call<OrderPostRequest> call, Response<OrderPostRequest> response) {
+
+                                            if (response.isSuccessful()) {
+                                                if (response.code() == 200) {
+                                                    Log.i("Create Re Order Request", "post submitted to API." + response.body().getMessage());
+                                                    Log.d("Re Order Response", "onResponse: " + response.body().getOrders().getStatus());
+                                                    Toast.makeText(context, "Order Placed", Toast.LENGTH_SHORT).show();
+                                                    notifyDataSetChanged();
+                                                }
+                                            } else {
+                                                if (response.code() == 401) {
+                                                    APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
+                                                    Log.i("Create Re Order Request", "post submitted to API." + message.getMessage());
+                                                    Toast.makeText(context, message.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<OrderPostRequest> call, Throwable t) {
+                                            Log.e("error", t.getMessage());
+                                        }
+
+                                    });
                                 } else if (btnStatus.equals("cancel")) {
-                                    viewModel.update(new Orders(currentOrder.getId(),currentOrder.getSenderClientID(),currentOrder.getReceiverClientID(),currentOrder.getShopName(),currentOrder.getAddress(),currentOrder.getMobile(),currentOrder.getOrderBy(),currentOrder.getCategoryID(),"Cancelled",currentOrder.getOrderNumber(),currentOrder.getUserID(),currentOrder.getCreatedAt(),currentOrder.getUpdatedAt(),currentOrder.getDeletedAt()));
+                                    viewModel.update(new Orders(currentOrder.getId(), currentOrder.getSenderClientID(), currentOrder.getReceiverClientID(), currentOrder.getShopName(), currentOrder.getAddress(), currentOrder.getMobile(), currentOrder.getOrderBy(), currentOrder.getCategoryID(), "Cancelled", currentOrder.getOrderNumber(), currentOrder.getUserID(), currentOrder.getCreatedAt(), currentOrder.getUpdatedAt(), currentOrder.getDeletedAt()));
                                     notifyDataSetChanged();
                                     mAPIService = new ApiUtils(context).getAPIService();
                                     mAPIService.OrderDeleteRequest(currentOrder.getId()).enqueue(new Callback<OrderPostRequest>() {
