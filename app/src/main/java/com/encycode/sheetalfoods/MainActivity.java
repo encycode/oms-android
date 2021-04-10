@@ -193,7 +193,8 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Size Product Type List", "onResponse: " + productTypeListResponse.size());
                         Log.d("Size Users List", "onResponse: " + UserListResponse.size());
                         for(int i=0;i<UserListResponse.size();i++) {
-                            usersViewModel.insert(new Users(UserListResponse.get(i).getId().intValue(),UserListResponse.get(i).getName(),UserListResponse.get(i).getShopName(),UserListResponse.get(i).getAddress(),UserListResponse.get(i).getMobile(),"role"));
+                            Log.i("Role  ", "onResponse: " + UserListResponse.get(i).getRole());
+                            usersViewModel.insert(new Users(UserListResponse.get(i).getId().intValue(),UserListResponse.get(i).getName(),UserListResponse.get(i).getShopName(),UserListResponse.get(i).getAddress(),UserListResponse.get(i).getMobile(),UserListResponse.get(i).getRole()));
                         }
                         for (int i = 0; i < categoryResponse.size(); i++) {
                             setDataAdapter(categoryResponse.get(i).getName(), categoryResponse.get(i).getImage(), categoryResponse.get(i).getStatus().intValue(), categoryResponse.get(i).getCreatedAt(), categoryResponse.get(i).getUpdatedAt(), categoryResponse.get(i).getDeletedAt(), categoryResponse.get(i).getId().intValue());
