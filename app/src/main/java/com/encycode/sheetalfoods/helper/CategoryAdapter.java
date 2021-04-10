@@ -62,6 +62,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     context.startActivity(i);
                 } else if(sh.getPrefString("role").equals("staff")) {
                     Intent i = new Intent(context,StaffCreateOrder.class);
+                    i.putExtra("cat_id",current.getId());
+                    i.putExtra("cat_name",current.getName());
                     context.startActivity(i);
                 }
 

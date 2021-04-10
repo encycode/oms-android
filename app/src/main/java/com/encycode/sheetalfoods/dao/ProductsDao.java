@@ -19,6 +19,9 @@ public interface ProductsDao {
     @Query("SELECT * FROM products WHERE product_type_id = :productTypeID")
     LiveData<List<Products>> getAllProductsForSpecificProductType(int productTypeID);
 
+    @Query("SELECT * FROM products WHERE id = :id")
+    LiveData<List<Products>> getSpecificProduct(int id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Products products);
 }

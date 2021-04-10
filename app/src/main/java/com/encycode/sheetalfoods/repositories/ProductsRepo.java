@@ -35,12 +35,22 @@ public class ProductsRepo {
     public LiveData<List<Products>> getAllProductsForSpecificProductType(int productID) {
         LiveData<List<Products>> products = null;
         try {
-            products = new GetAllProductsForSpecificProductTypeASYNCTask(dao).execute(productID).get(20, TimeUnit.SECONDS);
+            products = new GetAllProductsForSpecificProductTypeASYNCTask(dao).execute(productID).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } catch (TimeoutException e) {
+        }
+        return products;
+    }
+
+    public LiveData<List<Products>> getSpecificProduct(int id) {
+        LiveData<List<Products>> products = null;
+        try {
+            products = new GetSpecificProductASYNCTask(dao).execute(id).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return products;
@@ -72,6 +82,20 @@ public class ProductsRepo {
         @Override
         protected LiveData<List<Products>> doInBackground(Integer... integers) {
             return dao.getAllProductsForSpecificProductType(integers[0]);
+        }
+    }
+
+    public class GetSpecificProductASYNCTask extends AsyncTask<Integer, Void, LiveData<List<Products>>> {
+
+        ProductsDao dao;
+
+        public GetSpecificProductASYNCTask(ProductsDao dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected LiveData<List<Products>> doInBackground(Integer... integers) {
+            return dao.getSpecificProduct(integers[0]);
         }
     }
 }

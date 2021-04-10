@@ -14,7 +14,7 @@ import com.encycode.sheetalfoods.entity.OrderDetails;
 import com.encycode.sheetalfoods.entity.Orders;
 import com.encycode.sheetalfoods.helper.request.Order;
 
-@Database(entities = OrderDetails.class,version = 1)
+@Database(entities = com.encycode.sheetalfoods.entity.OrderDetails.class,version = 10)
 public abstract class OrderDetailsDatabase extends RoomDatabase {
 
     private static OrderDetailsDatabase instance;

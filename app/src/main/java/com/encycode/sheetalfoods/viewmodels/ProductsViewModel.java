@@ -15,6 +15,7 @@ public class ProductsViewModel extends AndroidViewModel {
 
     private ProductsRepo repo;
     protected LiveData<List<Products>> allProducts;
+
     public ProductsViewModel(@NonNull Application application) {
         super(application);
         repo = new ProductsRepo(application);
@@ -29,5 +30,9 @@ public class ProductsViewModel extends AndroidViewModel {
 
     public LiveData<List<Products>> getAllProductsForSpecificProductType(int productID) {
         return repo.getAllProductsForSpecificProductType(productID);
+    }
+
+    public LiveData<List<Products>> getSpecificProduct(int id) {
+        return repo.getSpecificProduct(id);
     }
 }

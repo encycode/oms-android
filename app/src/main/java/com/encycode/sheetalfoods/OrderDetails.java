@@ -9,21 +9,29 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.encycode.sheetalfoods.entity.Orders;
 import com.encycode.sheetalfoods.entity.ProductTypes;
 import com.encycode.sheetalfoods.entity.Products;
 import com.encycode.sheetalfoods.helper.APIError;
 import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
+import com.encycode.sheetalfoods.helper.ProductsAdapter;
+import com.encycode.sheetalfoods.helper.request.Order;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsDeleteRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsRequest;
+import com.encycode.sheetalfoods.viewmodels.OrderDetailsViewModel;
 import com.encycode.sheetalfoods.viewmodels.ProductTypesViewModel;
 import com.encycode.sheetalfoods.viewmodels.ProductsViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,7 +54,12 @@ public class OrderDetails extends AppCompatActivity {
 
     ProductsViewModel productsViewModel;
     ProductTypesViewModel productTypesViewModel;
+    OrderDetailsViewModel orderDetailsViewModel;
 
+    RecyclerView recyclerView;
+    List<com.encycode.sheetalfoods.entity.OrderDetails> orderDetailsFinal;
+
+    Orders currentOrder;
 
     int selectedProductTypeId, selectedProductId;
 
@@ -56,21 +69,48 @@ public class OrderDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
-        mAPIService = new ApiUtils(OrderDetails.this).getAPIService();
+
+
 
 
         productsViewModel = ViewModelProviders.of(this).get(ProductsViewModel.class);
         productTypesViewModel = ViewModelProviders.of(this).get(ProductTypesViewModel.class);
 
+        recyclerView = findViewById(R.id.productsRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+
+
 
         //Toast.makeText(this, products.size()+"", Toast.LENGTH_SHORT).show();
 
-
         button = findViewById(R.id.floatingActionButton);
+
+        currentOrder =(Orders)getIntent().getSerializableExtra("currentOrder");
+
+
+
+        orderDetailsViewModel = ViewModelProviders.of(this).get(OrderDetailsViewModel.class);
+        orderDetailsViewModel.getSpecificOrderDetails(currentOrder.getId()).observe(this, new Observer<List<com.encycode.sheetalfoods.entity.OrderDetails>>() {
+            @Override
+            public void onChanged(List<com.encycode.sheetalfoods.entity.OrderDetails> orderDetails) {
+                Toast.makeText(OrderDetails.this, ""+currentOrder.getId(), Toast.LENGTH_SHORT).show();
+                for(int i=0;i<orderDetails.size();i++) {
+                    orderDetailsFinal.add(orderDetails.get(i));
+                }
+            }
+        });
+
+        ProductsAdapter adapter = new ProductsAdapter(OrderDetails.this,currentOrder.getId());
+//        Toast.makeText(this, ""+orderDetailsFinal.size(), Toast.LENGTH_SHORT).show();
+        //adapter.setOrderDetails(orderDetailsFinal);
+//        recyclerView.setAdapter(adapter);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Button add;
+                ImageButton close;
                 ArrayList<String> productTypeNames;
                 ArrayList<Integer> productTypeIds;
                 ArrayList<String> productsNames = new ArrayList<>();
@@ -94,6 +134,8 @@ public class OrderDetails extends AppCompatActivity {
                 addProduct.setContentView(R.layout.add_product_popup_design);
                 totalItem = addProduct.findViewById(R.id.caretTotalItemTV);
                 caretOrder = addProduct.findViewById(R.id.caretCount);
+                add = addProduct.findViewById(R.id.addBtn);
+                close = addProduct.findViewById(R.id.closeBtn);
                 addProduct.setCancelable(true);
                 caretItem = addProduct.findViewById(R.id.caretItemTV);
                 WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -102,6 +144,13 @@ public class OrderDetails extends AppCompatActivity {
                 lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                 addProduct.show();
                 addProduct.getWindow().setAttributes(lp);
+
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addProduct.dismiss();
+                    }
+                });
 
                 ArrayAdapter<String> productTypesAdapter = new ArrayAdapter<>(OrderDetails.this, R.layout.dropdown_item, productTypeNames);
 
@@ -195,14 +244,17 @@ public class OrderDetails extends AppCompatActivity {
                         }
                     }
                 });
-
+                add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sendPost(currentOrder.getId(),productsList.get(selectedProductId).getId(),Integer.valueOf(caretOrder.getText().toString()));
+                        orderDetailsViewModel.insert(new com.encycode.sheetalfoods.entity.OrderDetails(currentOrder.getId(),productsList.get(selectedProductId).getId(),Integer.valueOf(caretOrder.getText().toString())));
+                        addProduct.dismiss();
+                    }
+                });
 
             }
         });
-
-//        sendPost(2,4,18);
-
-        deleteOrderDetetails(2);
     }
 
     public void sendPost(int order, int product, int carat_order) {
@@ -232,32 +284,5 @@ public class OrderDetails extends AppCompatActivity {
         });
     }
 
-    public void deleteOrderDetetails(int id) {
-        mAPIService.OrderDetailsDeleteRequest(id).enqueue(new Callback<OrderDetailsDeleteRequest>() {
-            @Override
-            public void onResponse(Call<OrderDetailsDeleteRequest> call, Response<OrderDetailsDeleteRequest> response) {
 
-                if (response.isSuccessful()) {
-                    if (response.code() == 200) {
-                        Log.i("Delete Order Request", "post submitted to API." + response.body().getMessage());
-                    }
-                    if (response.code() == 201) {
-                        Log.i("Delete Order Request", "post submitted to API." + response.body().getMessage());
-                    }
-                } else {
-                    if (response.code() == 401) {
-                        APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
-                        Log.i("Delete Order Request", "post submitted to API." + message.getMessage());
-                        Toast.makeText(OrderDetails.this, message.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<OrderDetailsDeleteRequest> call, Throwable t) {
-                Log.e("error", t.getMessage());
-            }
-
-        });
-    }
 }

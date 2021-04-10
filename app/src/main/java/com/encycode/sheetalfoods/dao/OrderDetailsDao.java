@@ -25,5 +25,5 @@ public interface OrderDetailsDao {
     LiveData<List<OrderDetails>> getAllOrderDetails();
 
     @Query("SELECT * FROM order_details WHERE order_id = :orderID")
-    OrderDetails getSpecificOrderDetails(int orderID);
+    LiveData<List<OrderDetails>> getSpecificOrderDetails(int orderID);
 }

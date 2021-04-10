@@ -6,16 +6,11 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 
 import com.encycode.sheetalfoods.dao.OrderDetailsDao;
-import com.encycode.sheetalfoods.dao.OrdersDao;
 import com.encycode.sheetalfoods.databases.OrderDetailsDatabase;
-import com.encycode.sheetalfoods.databases.OrdersDatabase;
 import com.encycode.sheetalfoods.entity.OrderDetails;
-import com.encycode.sheetalfoods.entity.Orders;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class OrderDetailsRepo {
     private OrderDetailsDao dao;
@@ -39,21 +34,19 @@ public class OrderDetailsRepo {
         return allOrdersDetails;
     }
 
-    public OrderDetails getSpecificOrderDetails(int orderID){
-        OrderDetails orderDetails = null;
+    public LiveData<List<OrderDetails>> getSpecificOrderDetails(int orderID) {
+        LiveData<List<OrderDetails>> orderDetails = null;
         try {
-            orderDetails = new GetSpecificOrderDetailsAsyncTask(dao).execute(orderID).get(20, TimeUnit.SECONDS);
+            orderDetails = new GetSpecificOrderDetailsAsyncTask(dao).execute(orderID).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
             e.printStackTrace();
         }
         return orderDetails;
     }
 
-    public static class InsertAsyncTask extends AsyncTask<OrderDetails,Void,Void> {
+    public static class InsertAsyncTask extends AsyncTask<OrderDetails, Void, Void> {
 
         private OrderDetailsDao dao;
 
@@ -68,7 +61,7 @@ public class OrderDetailsRepo {
         }
     }
 
-    public static class GetSpecificOrderDetailsAsyncTask extends AsyncTask<Integer,Void,OrderDetails> {
+    public static class GetSpecificOrderDetailsAsyncTask extends AsyncTask<Integer, Void, LiveData<List<OrderDetails>>> {
 
         private OrderDetailsDao dao;
 
@@ -77,13 +70,13 @@ public class OrderDetailsRepo {
         }
 
         @Override
-        protected OrderDetails doInBackground(Integer... integers) {
-            OrderDetails orderDetails = dao.getSpecificOrderDetails(integers[0]);
-            return orderDetails;
+        protected LiveData<List<OrderDetails>> doInBackground(Integer... integers) {
+            return dao.getSpecificOrderDetails(integers[0]);
         }
     }
 
-    public static class DeleteAsyncTask extends AsyncTask<OrderDetails,Void,Void> {
+
+    public static class DeleteAsyncTask extends AsyncTask<OrderDetails, Void, Void> {
 
         private OrderDetailsDao dao;
 

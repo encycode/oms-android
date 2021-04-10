@@ -80,7 +80,7 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
 
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 if (btnStatus.equals("reorder")) {
-                                    //reorder
+                                    viewModel.update(new Orders(currentOrder.getId(), currentOrder.getSenderClientID(), currentOrder.getReceiverClientID(), currentOrder.getShopName(), currentOrder.getAddress(), currentOrder.getMobile(), currentOrder.getOrderBy(), currentOrder.getCategoryID(), "Pending", currentOrder.getOrderNumber(), currentOrder.getUserID(), currentOrder.getCreatedAt(), currentOrder.getUpdatedAt(), currentOrder.getDeletedAt()));
                                     mAPIService = new ApiUtils(context).getAPIService();
                                     mAPIService.OrderDeleteRequest(currentOrder.getId()).enqueue(new Callback<OrderPostRequest>() {
                                         @Override
@@ -149,6 +149,7 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context, OrderDetails.class);
+                i.putExtra("currentOrder",currentOrder);
                 context.startActivity(i);
             }
         });
