@@ -27,6 +27,8 @@ import com.encycode.sheetalfoods.helper.CategoryAdapter;
 import com.encycode.sheetalfoods.helper.GetSharedPreferences;
 import com.encycode.sheetalfoods.helper.request.Category;
 import com.encycode.sheetalfoods.helper.request.CategoryRequest;
+import com.encycode.sheetalfoods.helper.request.OrderDetailsShow;
+import com.encycode.sheetalfoods.helper.request.OrderDetailsShowRequest;
 import com.encycode.sheetalfoods.helper.request.Product;
 import com.encycode.sheetalfoods.helper.request.ProductType;
 import com.encycode.sheetalfoods.helper.request.UsersResponse;
@@ -120,6 +122,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         categoryRecyclerView.setAdapter(adapter);
+
+        mAPIService.OrderDetailsGetRequest().enqueue(new Callback<OrderDetailsShowRequest>() {
+            @Override
+            public void onResponse(Call<OrderDetailsShowRequest> call, Response<OrderDetailsShowRequest> response) {
+                Toast.makeText(MainActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful()) {
+                    if (response.code() == 200) {
+                        Log.d("cat", "onResponse: " + response.body().getMessage());
+                        List<OrderDetailsShow> orderDetailsShowList = response.body().getOrderDetail();
+                        Log.d("Size Order DEtails List", "onResponse: " + orderDetailsShowList.size());
+                        for (int i = 0; i<orderDetailsShowList.size();i++){
+                            Log.d("Order DEtails List", "onResponse: " + orderDetailsShowList.get(i).getOrderId());
+                            Log.d("Order DEtails List", "onResponse: " + orderDetailsShowList.get(i).getCaratOrder());
+                            Log.d("Order DEtailsList", "onResponse: " + orderDetailsShowList.get(i).getProductId());
+                        }
+                    }
+                    if (response.code() == 201){
+                        Log.d("cat", "onResponse: " + response.body().getMessage());
+                        List<OrderDetailsShow> orderDetailsShowList = response.body().getOrderDetail();
+                        Log.d("Size Order DEtails List", "onResponse: " + orderDetailsShowList.size());
+                        for (int i = 0; i<orderDetailsShowList.size();i++){
+                            Log.d("Order DEtails List", "onResponse: " + orderDetailsShowList.get(i).getOrderId());
+                            Log.d("Order DEtails List", "onResponse: " + orderDetailsShowList.get(i).getCaratOrder());
+                            Log.d("Order DEtailsList", "onResponse: " + orderDetailsShowList.get(i).getProductId());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OrderDetailsShowRequest> call, Throwable t) {
+                Log.e("error", t.getMessage());
+            }
+        });
 
         mAPIService.CategoryGetRequest().enqueue(new Callback<CategoryRequest>() {
             @Override

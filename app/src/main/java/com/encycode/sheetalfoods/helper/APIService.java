@@ -4,6 +4,7 @@ import com.encycode.sheetalfoods.helper.request.CategoryRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsDeleteRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsEditRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsRequest;
+import com.encycode.sheetalfoods.helper.request.OrderDetailsShowRequest;
 import com.encycode.sheetalfoods.helper.request.OrderPostRequest;
 import com.encycode.sheetalfoods.helper.request.OrderRequest;
 import com.encycode.sheetalfoods.helper.request.StaffOrderRequest;
@@ -34,6 +35,10 @@ public interface APIService {
     @Headers({"Accept: application/json"})
     @GET("api/orders")
     Call<OrderRequest> OrderGetRequest();
+
+    @Headers({"Accept: application/json"})
+    @GET("api/order-details/show")
+    Call<OrderDetailsShowRequest> OrderDetailsGetRequest();
 
     @Headers({"Accept: application/json"})
     @FormUrlEncoded
