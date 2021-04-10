@@ -13,7 +13,7 @@ import com.encycode.sheetalfoods.dao.OrderDetailsDao;
 import com.encycode.sheetalfoods.dao.OrdersDao;
 import com.encycode.sheetalfoods.entity.Orders;
 
-@Database(entities = Orders.class,version = 2)
+@Database(entities = Orders.class,version = 3)
 public abstract class OrdersDatabase extends RoomDatabase {
     private static OrdersDatabase instance;
 

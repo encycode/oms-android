@@ -82,6 +82,8 @@ public class StaffCreateOrder extends AppCompatActivity {
             }
         });
 
+
+
         int catId = i.getIntExtra("cat_id",-1);
 
         mAPIService = new ApiUtils(StaffCreateOrder.this).getAPIService();
@@ -108,7 +110,20 @@ public class StaffCreateOrder extends AppCompatActivity {
                 for(int i=0;i<dealerNames.size();i++) {
                     if(s.toString().equals(dealerNames.get(i))) {
                         dealerId = i;
+                        //Toast.makeText(StaffCreateOrder.this, ""+dealerIds.get(dealerId), Toast.LENGTH_SHORT).show();
                     }
+                }
+                Toast.makeText(StaffCreateOrder.this, ""+dealerId, Toast.LENGTH_SHORT).show();
+                if(dealerId != -1) {
+                    usersViewModel.getUserById(dealerIds.get(dealerId)).observe(StaffCreateOrder.this, new Observer<List<Users>>() {
+                        @Override
+                        public void onChanged(List<Users> users) {
+                            //Toast.makeText(StaffCreateOrder.this, users.get(0).getShopName(), Toast.LENGTH_SHORT).show();
+                            shopName.setText(users.get(0).getShopName());
+                            mobile.setText(users.get(0).getMobile());
+                            address.setText(users.get(0).getAddress());
+                        }
+                    });
                 }
             }
         });

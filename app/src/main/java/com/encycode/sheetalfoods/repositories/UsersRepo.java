@@ -44,6 +44,18 @@ public class UsersRepo {
         return users;
     }
 
+    public LiveData<List<Users>> getUserById(int id) {
+        LiveData<List<Users>> users = null;
+        try {
+            users =  new GetUserByIdAsyncTask(dao).execute(id).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
     public class InsertAsyncTask extends AsyncTask<Users,Void,Void> {
 
         private UsersDao dao;
@@ -70,6 +82,20 @@ public class UsersRepo {
         @Override
         protected LiveData<List<Users>> doInBackground(String... strings) {
             return dao.getAllUsersByRole(strings[0]);
+        }
+    }
+
+    public class GetUserByIdAsyncTask extends AsyncTask<Integer,Void,LiveData<List<Users>>> {
+
+        private UsersDao dao;
+
+        public GetUserByIdAsyncTask(UsersDao dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected LiveData<List<Users>> doInBackground(Integer... integers) {
+            return dao.getUsersById(integers[0]);
         }
     }
 }

@@ -16,7 +16,7 @@ import com.encycode.sheetalfoods.dao.CategoriesDao;
 import com.encycode.sheetalfoods.dao.UsersDao;
 import com.encycode.sheetalfoods.entity.Users;
 
-@Database(entities = Users.class,version = 1)
+@Database(entities = Users.class,version = 2)
 public abstract class UsersDatabase extends RoomDatabase {
 
     private static UsersDatabase instance;
@@ -27,7 +27,7 @@ public abstract class UsersDatabase extends RoomDatabase {
         if(instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                     UsersDatabase.class,
-                    "Users Database").fallbackToDestructiveMigration()
+                    "Categories Database").fallbackToDestructiveMigration()
                     .build();
         }
         return instance;

@@ -21,4 +21,7 @@ public interface UsersDao {
     @Query("SELECT * FROM users WHERE role = :role")
     LiveData<List<Users>> getAllUsersByRole(String role);
 
+    @Query("SELECT * FROM users WHERE id = :id")
+    LiveData<List<Users>> getUsersById(int id);
+
 }

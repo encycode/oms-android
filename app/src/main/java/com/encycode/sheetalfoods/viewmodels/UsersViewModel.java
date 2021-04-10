@@ -27,6 +27,10 @@ public class UsersViewModel extends AndroidViewModel {
         return allUsers;
     }
 
+    public LiveData<List<Users>> getUserById(int id) {
+        return repo.getUserById(id);
+    }
+
     public void insert(Users users) {
         repo.insert(users);
     }
