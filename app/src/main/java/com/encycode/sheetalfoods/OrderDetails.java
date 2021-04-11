@@ -232,7 +232,8 @@ public class OrderDetails extends AppCompatActivity {
                 productType.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
-                        productType.clearFocus();
+                        if(!hasFocus)
+                            productType.clearFocus();
                     }
                 });
 
@@ -270,7 +271,8 @@ public class OrderDetails extends AppCompatActivity {
                 product.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
-                        product.clearFocus();
+                        if(!hasFocus)
+                            product.clearFocus();
                     }
                 });
 
