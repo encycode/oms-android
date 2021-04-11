@@ -1,6 +1,7 @@
 package com.encycode.sheetalfoods.helper;
 
 import com.encycode.sheetalfoods.helper.request.CategoryRequest;
+import com.encycode.sheetalfoods.helper.request.NotificationRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsDeleteRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsEditRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsRequest;
@@ -41,6 +42,10 @@ public interface APIService {
     Call<OrderDetailsShowRequest> OrderDetailsGetRequest();
 
     @Headers({"Accept: application/json"})
+    @GET("api/notifications")
+    Call<NotificationRequest> NotificationGetRequest();
+
+    @Headers({"Accept: application/json"})
     @FormUrlEncoded
     @POST("api/orders")
     Call<OrderPostRequest> OrderPostRequest(@Field("orderby") String orderby,
@@ -66,6 +71,10 @@ public interface APIService {
     @Headers({"Accept: application/json"})
     @DELETE("api/orders/delete")
     Call<OrderPostRequest> OrderDeleteRequest(@Query("id") int id);
+
+    @Headers({"Accept: application/json"})
+    @DELETE("api/notifications/delete")
+    Call<NotificationRequest> DeleteNotificationRequest(@Query("id") int id);
 
     @Headers({"Accept: application/json"})
     @DELETE("api/order-details/delete")
