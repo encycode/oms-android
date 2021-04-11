@@ -68,6 +68,18 @@
                 android:textColor="@color/buttonDefault" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/productTypeError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/error"
+            android:drawablePadding="10sp"
+            android:drawableTint="@color/red"
+            android:text="Please select Product Type."
+            android:textColor="@color/red"
+            android:visibility="gone"
+            android:textSize="18sp" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/products_dropdown"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -92,13 +104,25 @@
                 android:textColor="@color/buttonDefault" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/productError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/error"
+            android:drawablePadding="10sp"
+            android:drawableTint="@color/red"
+            android:text="Please select Product."
+            android:textColor="@color/red"
+            android:visibility="gone"
+            android:textSize="18sp" />
+
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginVertical="10dp"
-            android:hint="Enter Product Count"
+            android:hint="Enter Caret Count"
             android:textColorHint="@color/buttonDefault"
             app:boxStrokeColor="@color/buttonDefault"
             app:endIconMode="clear_text"
@@ -113,6 +137,18 @@
                 android:inputType="number"
                 android:textColor="@color/buttonDefault" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/caretError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/error"
+            android:drawablePadding="10sp"
+            android:drawableTint="@color/red"
+            android:text="Please select Product Type."
+            android:textColor="@color/red"
+            android:visibility="gone"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"

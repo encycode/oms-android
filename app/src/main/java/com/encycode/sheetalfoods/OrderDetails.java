@@ -56,6 +56,8 @@ public class OrderDetails extends AppCompatActivity {
     Toolbar toolbar;
     List<ProductTypes> productTypesList = new ArrayList<>();
 
+
+    boolean isDone;
     ProductsViewModel productsViewModel;
     ProductTypesViewModel productTypesViewModel;
     OrderDetailsViewModel orderDetailsViewModel;
@@ -111,7 +113,7 @@ public class OrderDetails extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         getSupportActionBar().hide();
-        toolbar.setTitle("Order Number: "+currentOrder.getOrderNumber());
+        toolbar.setTitle("Order Number: " + currentOrder.getOrderNumber());
         toolbar.setTitleTextColor(getColor(R.color.white));
         toolbar.setBackgroundColor(getColor(R.color.buttonDefault));
         setActionBar(toolbar);
@@ -126,7 +128,7 @@ public class OrderDetails extends AppCompatActivity {
         adapter.setOrderDetails(orderDetailsFinal);
         recyclerView.setAdapter(adapter);
 
-        if(currentOrder.getStatus().equals("Confirmed")) {
+        if (currentOrder.getStatus().equals("Confirmed")) {
             confirm.setVisibility(View.GONE);
         } else
             confirm.setVisibility(View.VISIBLE);
@@ -137,7 +139,6 @@ public class OrderDetails extends AppCompatActivity {
                 ToggleStatus(currentOrder.getId());
             }
         });
-
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -151,20 +152,15 @@ public class OrderDetails extends AppCompatActivity {
                 ArrayList<Integer> productsIds = new ArrayList<>();
                 productTypeNames = new ArrayList<>();
                 productTypeIds = new ArrayList<>();
-                productTypesViewModel.getAllProductTypes().observe(OrderDetails.this, new Observer<List<ProductTypes>>() {
-                    @Override
-                    public void onChanged(List<ProductTypes> productTypes) {
-                        for (int i = 0; i < productTypes.size(); i++) {
-                            productTypeNames.add(productTypes.get(i).getName());
-                            productTypeIds.add(productTypes.get(i).getId());
-                            productTypesList.add(productTypes.get(i));
-                        }
-                    }
-                });
                 AutoCompleteTextView productType, product;
                 EditText caretOrder;
-                TextView caretItem, totalItem;
+                TextView caretItem, totalItem, productTypeError, productError, caretError;
+
+
                 addProduct = new Dialog(OrderDetails.this);
+                productTypeError = addProduct.findViewById(R.id.productTypeError);
+                productError = addProduct.findViewById(R.id.productError);
+                caretError = addProduct.findViewById(R.id.caretError);
                 addProduct.setContentView(R.layout.add_product_popup_design);
                 totalItem = addProduct.findViewById(R.id.caretTotalItemTV);
                 caretOrder = addProduct.findViewById(R.id.caretCount);
@@ -178,6 +174,17 @@ public class OrderDetails extends AppCompatActivity {
                 lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                 addProduct.show();
                 addProduct.getWindow().setAttributes(lp);
+
+                productTypesViewModel.getAllProductTypes().observe(OrderDetails.this, new Observer<List<ProductTypes>>() {
+                    @Override
+                    public void onChanged(List<ProductTypes> productTypes) {
+                        for (int i = 0; i < productTypes.size(); i++) {
+                            productTypeNames.add(productTypes.get(i).getName());
+                            productTypeIds.add(productTypes.get(i).getId());
+                            productTypesList.add(productTypes.get(i));
+                        }
+                    }
+                });
 
                 close.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -230,8 +237,58 @@ public class OrderDetails extends AppCompatActivity {
                 productType.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
-                        if(!hasFocus)
+                        if (!hasFocus) {
                             productType.clearFocus();
+                            if (productType.getText().equals("")) {
+                                productTypeError.setVisibility(View.VISIBLE);
+                                isDone = false;
+                            } else {
+                                productTypeError.setVisibility(View.GONE);
+                                isDone = true;
+                            }
+                        }
+                    }
+                });
+
+                product.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (!hasFocus) {
+                            product.clearFocus();
+                            if (product.getText().equals("")) {
+                                productError.setVisibility(View.VISIBLE);
+                                isDone = false;
+                            } else {
+                                productError.setVisibility(View.GONE);
+                                isDone = true;
+                            }
+                        }
+                    }
+                });
+
+                caretOrder.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (!hasFocus) {
+                            caretOrder.clearFocus();
+                            if (caretOrder.getText().equals("")) {
+                                caretError.setVisibility(View.VISIBLE);
+                                isDone = false;
+                            }
+                            if (Integer.parseInt(caretOrder.getText().toString()) == 0) {
+                                caretError.setText("Order cannot be of 0 caret.");
+                                caretError.setVisibility(View.VISIBLE);
+                                isDone = false;
+                            }
+                            if (caretOrder.getText().toString().contains(".")) {
+                                caretError.setText("Caret number must be in decimal");
+                                caretError.setVisibility(View.VISIBLE);
+                                isDone = true;
+                            } else {
+                                caretError.setVisibility(View.GONE);
+                                isDone = true;
+                            }
+                        }
                     }
                 });
 
@@ -266,13 +323,6 @@ public class OrderDetails extends AppCompatActivity {
 
                 });
 
-                product.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if(!hasFocus)
-                            product.clearFocus();
-                    }
-                });
 
                 caretOrder.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -299,8 +349,32 @@ public class OrderDetails extends AppCompatActivity {
                 add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        sendPost(currentOrder.getId(), productsList.get(selectedProductId).getId(), Integer.parseInt(caretOrder.getText().toString()));
-                        addProduct.dismiss();
+                        if (caretOrder.getText().equals("")) {
+                            caretError.setVisibility(View.VISIBLE);
+                            isDone = false;
+                        }
+                        if (Integer.parseInt(caretOrder.getText().toString()) == 0) {
+                            caretError.setText("Order cannot be of 0 caret.");
+                            caretError.setVisibility(View.VISIBLE);
+                            isDone = false;
+                        }
+                        if (caretOrder.getText().toString().contains(".")) {
+                            caretError.setText("Caret number must be in decimal");
+                            caretError.setVisibility(View.VISIBLE);
+                            isDone = true;
+                        }
+                        if (product.getText().equals("")) {
+                            productError.setVisibility(View.VISIBLE);
+                            isDone = false;
+                        }
+                        if (productType.getText().equals("")) {
+                            productTypeError.setVisibility(View.VISIBLE);
+                            isDone = false;
+                        } else {
+                            if(isDone)
+                            sendPost(currentOrder.getId(), productsList.get(selectedProductId).getId(), Integer.parseInt(caretOrder.getText().toString()));
+                            addProduct.dismiss();
+                        }
                     }
                 });
 
@@ -349,7 +423,7 @@ public class OrderDetails extends AppCompatActivity {
                         Log.d("Order Response", "onResponse: " + response.body().getOrders().getStatus());
                         currentOrder.setStatus("Confirmed");
                         ordersViewModel.update(currentOrder);
-                        if(currentOrder.getStatus().equals("Confirmed")) {
+                        if (currentOrder.getStatus().equals("Confirmed")) {
                             confirm.setVisibility(View.GONE);
                         } else
                             confirm.setVisibility(View.VISIBLE);

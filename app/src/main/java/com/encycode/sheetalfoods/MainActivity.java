@@ -29,6 +29,7 @@ import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
 import com.encycode.sheetalfoods.helper.CategoryAdapter;
 import com.encycode.sheetalfoods.helper.GetSharedPreferences;
+import com.encycode.sheetalfoods.helper.ProgressLoading;
 import com.encycode.sheetalfoods.helper.request.Category;
 import com.encycode.sheetalfoods.helper.request.CategoryRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsShow;
@@ -64,11 +65,13 @@ public class MainActivity extends AppCompatActivity {
     ProductTypesViewModel productTypesViewModel;
     OrderDetailsViewModel orderDetailsViewModel;
     UsersViewModel usersViewModel;
+    ProgressLoading loading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        loading = new ProgressLoading(MainActivity.this);
         productsViewModel = new ProductsViewModel(getApplication());
         productTypesViewModel = new ProductTypesViewModel(getApplication());
         toolbar = findViewById(R.id.toolbar);
@@ -145,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<OrderDetailsShowRequest> call, Response<OrderDetailsShowRequest> response) {
                 //Toast.makeText(MainActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                //loading.startLoading();
                 if (response.isSuccessful()) {
                     if (response.code() == 200) {
                         Log.d("cat", "onResponse: " + response.body().getMessage());
@@ -156,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("Order DEtailsList", "onResponse: " + orderDetailsShowList.get(i).getProductId());
                             orderDetailsViewModel.insert(new OrderDetails(orderDetailsShowList.get(i).getId().intValue(),orderDetailsShowList.get(i).getOrderId().intValue(),orderDetailsShowList.get(i).getCaratOrder().intValue(),orderDetailsShowList.get(i).getCaratOrder().intValue(),orderDetailsShowList.get(i).getProductId().intValue()));
                         }
+                        //loading.endLoading();
                     }
                     if (response.code() == 201){
                         Log.d("cat", "onResponse: " + response.body().getMessage());
@@ -181,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<CategoryRequest> call, Response<CategoryRequest> response) {
                 //Toast.makeText(MainActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                loading.startLoading();
                 if (response.isSuccessful()) {
                     if (response.code() == 200) {
                         Log.d("cat", "onResponse: " + response.body().getMessage());
@@ -232,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
                             productTypesViewModel.insert(new ProductTypes(id,category_id,name,status,created_at,updated_at,deleted_at));
                         }
                     }
+                    loading.endLoading();
                 }
             }
 

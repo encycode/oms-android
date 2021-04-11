@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -47,9 +48,12 @@ public class StaffCreateOrder extends AppCompatActivity {
     int dealerId = -1;
     UsersViewModel usersViewModel;
     OrdersViewModel ordersViewModel;
+    TextView shopNameError,mobileError,addressError;
     ArrayList<String> dealerNames = new ArrayList<>();
     ArrayList<Integer> dealerIds = new ArrayList<>();
     ProgressLoading loading;
+    Orders orders;
+    boolean isDone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +73,14 @@ public class StaffCreateOrder extends AppCompatActivity {
         shopName = findViewById(R.id.shopNameET);
         mobile = findViewById(R.id.shopMobileET);
         address = findViewById(R.id.shopAddressET);
+
+        shopNameError = findViewById(R.id.shopNameError);
+        mobileError = findViewById(R.id.mobileError);
+        addressError = findViewById(R.id.addressError);
+        isDone = true;
+        shopNameError.setVisibility(View.GONE);
+        mobileError.setVisibility(View.GONE);
+        addressError.setVisibility(View.GONE);
 
         Intent i = getIntent();
 
@@ -133,9 +145,54 @@ public class StaffCreateOrder extends AppCompatActivity {
         dealerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
+                if(!hasFocus)
                 {
                     dealerName.clearFocus();
+                }
+            }
+        });
+
+        shopName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    if(shopName.getText().toString().equals("")) {
+                        shopNameError.setVisibility(View.VISIBLE);
+                        isDone = false;
+                    } else {
+                        shopNameError.setVisibility(View.GONE);
+                        isDone = true;
+                    }
+                }
+            }
+        });
+
+        mobile.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    if(mobile.getText().toString().length() < 10) {
+                        mobileError.setVisibility(View.VISIBLE);
+                        isDone = false;
+                    } else {
+                        mobileError.setVisibility(View.GONE);
+                        isDone = true;
+                    }
+                }
+            }
+        });
+
+        address.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    if(address.getText().toString().equals("")) {
+                        addressError.setVisibility(View.VISIBLE);
+                        isDone = false;
+                    } else {
+                        addressError.setVisibility(View.GONE);
+                        isDone = true;
+                    }
                 }
             }
         });
@@ -143,10 +200,19 @@ public class StaffCreateOrder extends AppCompatActivity {
         btnCreateStaffOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendPost(dealerId, shopName.getText().toString(), address.getText().toString(), mobile.getText().toString(), "staff", catId);
-                Intent i = new Intent(StaffCreateOrder.this,ViewOrders.class);
-                startActivity(i);
-                finish();
+                if(address.getText().toString().equals("")) {
+                    addressError.setVisibility(View.VISIBLE);
+                    isDone = false;
+                }if(mobile.getText().toString().length() < 10) {
+                    mobileError.setVisibility(View.VISIBLE);
+                    isDone = false;
+                }if(shopName.getText().toString().equals("")) {
+                    shopNameError.setVisibility(View.VISIBLE);
+                    isDone = false;
+                } else {
+                    if(isDone)
+                        sendPost(dealerId, shopName.getText().toString(), address.getText().toString(), mobile.getText().toString(), "staff", catId);
+                }
             }
         });
     }
@@ -164,8 +230,13 @@ public class StaffCreateOrder extends AppCompatActivity {
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getShopName());
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getAddress());
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getMobile());
-                        ordersViewModel.insert(new Orders(response.body().getOrders().getId().intValue(),response.body().getOrders().getSenderClientid().intValue(),response.body().getOrders().getReceiverClientid().intValue(),response.body().getOrders().getShopName(),response.body().getOrders().getAddress(),response.body().getOrders().getMobile(),response.body().getOrders().getOrderby(),response.body().getOrders().getCategoryId().intValue(),response.body().getOrders().getStatus(),response.body().getOrders().getOrderNumber(),response.body().getOrders().getUserId().intValue(),response.body().getOrders().getCreatedAt(),response.body().getOrders().getUpdatedAt(),response.body().getOrders().getDeletedAt()));
+                        orders = new Orders(response.body().getOrders().getId().intValue(),response.body().getOrders().getSenderClientid().intValue(),response.body().getOrders().getReceiverClientid().intValue(),response.body().getOrders().getShopName(),response.body().getOrders().getAddress(),response.body().getOrders().getMobile(),response.body().getOrders().getOrderby(),response.body().getOrders().getCategoryId().intValue(),response.body().getOrders().getStatus(),response.body().getOrders().getOrderNumber(),response.body().getOrders().getUserId().intValue(),response.body().getOrders().getCreatedAt(),response.body().getOrders().getUpdatedAt(),response.body().getOrders().getDeletedAt());
+                        ordersViewModel.insert(orders);
+                        Intent i = new Intent(StaffCreateOrder.this,ViewOrders.class);
+                        i.putExtra("currentOrder",orders);
                         loading.endLoading();
+                        startActivity(i);
+                        finish();
                     }
                 } else {
                     if (response.code() == 401) {
