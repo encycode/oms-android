@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/buttonDefault"
+    android:background="@color/backgroundDefault"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".SplashScreen">
@@ -15,7 +15,7 @@
         android:layout_height="200dp"
         android:src="@drawable/sheetal_logo"
         android:layout_margin="20dp"
-        app:tint="@color/backgroundDefault" />
+        app:tint="@color/buttonDefault" />
 
     <TextView
         android:id="@+id/splash_logo_bottom"
@@ -26,6 +26,6 @@
         android:gravity="center"
         android:textStyle="bold"
         android:textSize="30sp"
-        android:textColor="@color/backgroundDefault"/>
+        android:textColor="@color/buttonDefault"/>
 
 </LinearLayout>

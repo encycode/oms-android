@@ -19,6 +19,8 @@ import com.encycode.sheetalfoods.helper.APIError;
 import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
 import com.encycode.sheetalfoods.helper.GetSharedPreferences;
+import com.encycode.sheetalfoods.helper.ProgressLoading;
+import com.encycode.sheetalfoods.helper.request.Order;
 import com.encycode.sheetalfoods.helper.request.OrderPostRequest;
 import com.encycode.sheetalfoods.viewmodels.OrdersViewModel;
 import com.google.gson.Gson;
@@ -35,13 +37,16 @@ public class DealerCreateOrder extends AppCompatActivity {
     Intent i;
     Toolbar toolbar;
     OrdersViewModel viewModel;
+    Orders orders;
     private APIService mAPIService;
+    ProgressLoading loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dealer_create_order);
 
+        loading = new ProgressLoading(DealerCreateOrder.this);
         toolbar = findViewById(R.id.toolbar);
         getSupportActionBar().hide();
         toolbar.setTitle("Create Order");
@@ -73,6 +78,7 @@ public class DealerCreateOrder extends AppCompatActivity {
     }
 
     public void sendPost(String orderBy, int category) {
+        loading.startLoading();
         Log.i("log send post", "sendPost: " + orderBy + " ---- " + category);
         mAPIService.OrderPostRequest(orderBy, category).enqueue(new Callback<OrderPostRequest>() {
             @Override
@@ -82,13 +88,15 @@ public class DealerCreateOrder extends AppCompatActivity {
                     if (response.code() == 200) {
                         Log.i("Create Order Request", "post submitted to API." + response.body().getMessage());
                         Log.d("Order Response", "onResponse: " + response.body().getOrders().getOrderNumber());
-                        viewModel.insert(new Orders(response.body().getOrders().getId(),response.body().getOrders().getSenderClientid(),response.body().getOrders().getReceiverClientid(),response.body().getOrders().getShopName(),response.body().getOrders().getAddress(),response.body().getOrders().getMobile(),response.body().getOrders().getOrderby(),response.body().getOrders().getCategoryId(),response.body().getOrders().getStatus(),response.body().getOrders().getOrderNumber(),response.body().getOrders().getUserId(),response.body().getOrders().getCreatedAt(),response.body().getOrders().getUpdatedAt(),response.body().getOrders().getDeletedAt()));
+                        orders = new Orders(response.body().getOrders().getId(),response.body().getOrders().getSenderClientid(),response.body().getOrders().getReceiverClientid(),response.body().getOrders().getShopName(),response.body().getOrders().getAddress(),response.body().getOrders().getMobile(),response.body().getOrders().getOrderby(),response.body().getOrders().getCategoryId(),response.body().getOrders().getStatus(),response.body().getOrders().getOrderNumber(),response.body().getOrders().getUserId(),response.body().getOrders().getCreatedAt(),response.body().getOrders().getUpdatedAt(),response.body().getOrders().getDeletedAt());
+                        viewModel.insert(orders);
+                        loading.endLoading();
                         dialogBoxDisplay("Order Place Successfully \n Your Order Number is : "+response.body().getOrders().getOrderNumber(),"Order",DealerCreateOrder.this);
-                        Intent i = new Intent(DealerCreateOrder.this,ViewOrders.class);
-                        startActivity(i);
+
                     }
                 } else {
                     if (response.code() == 401) {
+                        loading.endLoading();
                         APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
                         Log.i("Create Order Request", "post submitted to API." + message.getMessage());
                         Toast.makeText(DealerCreateOrder.this, message.getMessage(), Toast.LENGTH_SHORT).show();
@@ -113,11 +121,18 @@ public class DealerCreateOrder extends AppCompatActivity {
                 .setNegativeButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        intentToOrderDetails();
                     }
                 });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    public void intentToOrderDetails() {
+        Intent i = new Intent(DealerCreateOrder.this,OrderDetails.class);
+        i.putExtra("currentOrder",orders);
+        startActivity(i);
     }
 
 }

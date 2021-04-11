@@ -198,7 +198,6 @@
                     android:id="@+id/productsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="320dp"
                     android:overScrollMode="never"
                     tools:itemCount="2"
                     tools:listitem="@layout/product_rv_design" />

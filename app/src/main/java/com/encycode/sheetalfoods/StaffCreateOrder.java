@@ -22,6 +22,7 @@ import com.encycode.sheetalfoods.entity.Users;
 import com.encycode.sheetalfoods.helper.APIError;
 import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
+import com.encycode.sheetalfoods.helper.ProgressLoading;
 import com.encycode.sheetalfoods.helper.request.StaffOrderRequest;
 import com.encycode.sheetalfoods.viewmodels.OrdersViewModel;
 import com.encycode.sheetalfoods.viewmodels.UsersViewModel;
@@ -48,12 +49,12 @@ public class StaffCreateOrder extends AppCompatActivity {
     OrdersViewModel ordersViewModel;
     ArrayList<String> dealerNames = new ArrayList<>();
     ArrayList<Integer> dealerIds = new ArrayList<>();
-
+    ProgressLoading loading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_create_order);
-
+        loading = new ProgressLoading(StaffCreateOrder.this);
         dealerName = findViewById(R.id.dealerNameDropdown);
         textInputLayout = findViewById(R.id.dealerName_dropdown);
         toolbar = findViewById(R.id.toolbar);
@@ -150,6 +151,7 @@ public class StaffCreateOrder extends AppCompatActivity {
         });
     }
     public void sendPost(int receiver_client, String shop_name, String address, String mobile, String orderby, int category) {
+        loading.startLoading();
         mAPIService.OrderStaffPostRequest(receiver_client, shop_name, mobile, address, orderby, category).enqueue(new Callback<StaffOrderRequest>() {
             @Override
             public void onResponse(Call<StaffOrderRequest> call, Response<StaffOrderRequest> response) {
@@ -163,11 +165,13 @@ public class StaffCreateOrder extends AppCompatActivity {
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getAddress());
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getMobile());
                         ordersViewModel.insert(new Orders(response.body().getOrders().getId().intValue(),response.body().getOrders().getSenderClientid().intValue(),response.body().getOrders().getReceiverClientid().intValue(),response.body().getOrders().getShopName(),response.body().getOrders().getAddress(),response.body().getOrders().getMobile(),response.body().getOrders().getOrderby(),response.body().getOrders().getCategoryId().intValue(),response.body().getOrders().getStatus(),response.body().getOrders().getOrderNumber(),response.body().getOrders().getUserId().intValue(),response.body().getOrders().getCreatedAt(),response.body().getOrders().getUpdatedAt(),response.body().getOrders().getDeletedAt()));
+                        loading.endLoading();
                     }
                 } else {
                     if (response.code() == 401) {
                         APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
                         Log.i("Create Order Request", "post submitted to API." + message.getMessage());
+                        loading.endLoading();
                         Toast.makeText(StaffCreateOrder.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }

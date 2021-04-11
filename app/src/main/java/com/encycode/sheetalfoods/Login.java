@@ -19,6 +19,7 @@ import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
 import com.encycode.sheetalfoods.helper.GetSharedPreferences;
 import com.encycode.sheetalfoods.helper.LoginRequest;
+import com.encycode.sheetalfoods.helper.ProgressLoading;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
@@ -35,6 +36,7 @@ public class Login extends AppCompatActivity {
     SharedPreferences.Editor myEdit;
     Intent i;
     private APIService mAPIService;
+    ProgressLoading loading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,8 @@ public class Login extends AppCompatActivity {
         myEdit = sh.edit();
 
         getSupportActionBar().hide();
+
+        loading = new ProgressLoading(Login.this);
 
         if(sh.getBoolean("isLogin",false)) {
             startActivity(i);
@@ -65,18 +69,11 @@ public class Login extends AppCompatActivity {
                 usernameVal = username.getText().toString();
                 passwordVal = password.getText().toString();
                 sendPost(usernameVal, passwordVal);
-//                if (usernameVal.equals("order") && passwordVal.equals("order")) {
-//                    startActivity(i);
-//                    myEdit.putBoolean("isLogin",true);
-//                    myEdit.commit();
-//                    finish();
-//                } else {
-//                    Toast.makeText(Login.this, "Invalid Username/Password", Toast.LENGTH_SHORT).show();
-//                }
             }
         });
     }
     public void sendPost(String uname, String pass) {
+        loading.startLoading();
         mAPIService.LoginPostRequest(uname, pass).enqueue(new Callback<LoginRequest>() {
             @Override
             public void onResponse(Call<LoginRequest> call, Response<LoginRequest> response) {
@@ -97,8 +94,8 @@ public class Login extends AppCompatActivity {
                         loginShared.setPrefBoolean("isLogin", true);
 
                         Log.d("Shared Pref", "onResponse: " + loginShared.getPrefString("name"));
-
                         startActivity(i);
+                        loading.endLoading();
                         finish();
                     }
                 } else{
@@ -106,6 +103,7 @@ public class Login extends AppCompatActivity {
                         APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
                         Log.i("Login Status", "post submitted to API." + message.getMessage());
 //                        dialogBoxDisplay(message.getMessage(), "Login Status", Login.this);
+                        loading.endLoading();
                         Toast.makeText(Login.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -114,6 +112,7 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginRequest> call, Throwable t) {
+                loading.endLoading();
                 Log.e("error", t.getMessage().toString());
             }
 

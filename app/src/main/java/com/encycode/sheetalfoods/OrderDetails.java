@@ -29,6 +29,7 @@ import com.encycode.sheetalfoods.helper.APIError;
 import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
 import com.encycode.sheetalfoods.helper.ProductsAdapter;
+import com.encycode.sheetalfoods.helper.ProgressLoading;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsEditRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsRequest;
 import com.encycode.sheetalfoods.viewmodels.OrderDetailsViewModel;
@@ -64,7 +65,7 @@ public class OrderDetails extends AppCompatActivity {
 
     Orders currentOrder;
     OrdersViewModel ordersViewModel;
-
+    ProgressLoading loading;
     int selectedProductTypeId, selectedProductId;
 
     private APIService mAPIService;
@@ -75,7 +76,7 @@ public class OrderDetails extends AppCompatActivity {
         setContentView(R.layout.activity_order_details);
 
 
-
+        loading = new ProgressLoading(OrderDetails.this);
         mAPIService = new ApiUtils(this).getAPIService();
 
 
@@ -134,9 +135,6 @@ public class OrderDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ToggleStatus(currentOrder.getId());
-                currentOrder.setStatus("Confirmed");
-                ordersViewModel.update(currentOrder);
-                recreate();
             }
         });
 
@@ -302,7 +300,6 @@ public class OrderDetails extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         sendPost(currentOrder.getId(), productsList.get(selectedProductId).getId(), Integer.parseInt(caretOrder.getText().toString()));
-                        orderDetailsViewModel.insert(new com.encycode.sheetalfoods.entity.OrderDetails(1, currentOrder.getId(), Integer.parseInt(caretOrder.getText().toString()), productsList.get(selectedProductId).getCaretPrice(), productsList.get(selectedProductId).getId()));
                         addProduct.dismiss();
                     }
                 });
@@ -320,6 +317,8 @@ public class OrderDetails extends AppCompatActivity {
                     if (response.code() == 200) {
                         Log.i("Create Order Request", "post submitted to API." + response.body().getMessage());
                         Log.d("Order Response", "onResponse: " + response.body().getProduct().getCaratOrder());
+                        orderDetailsViewModel.insert(new com.encycode.sheetalfoods.entity.OrderDetails(response.body().getProduct().getId().intValue(), currentOrder.getId(), carat_order, productsList.get(selectedProductId).getCaretPrice(), productsList.get(selectedProductId).getId()));
+                        loading.endLoading();
                     }
                 } else {
                     if (response.code() == 401) {
@@ -339,6 +338,7 @@ public class OrderDetails extends AppCompatActivity {
     }
 
     public void ToggleStatus(int order) {
+        loading.startLoading();
         mAPIService.OrderDetailsEditRequest(order).enqueue(new Callback<OrderDetailsEditRequest>() {
             @Override
             public void onResponse(Call<OrderDetailsEditRequest> call, Response<OrderDetailsEditRequest> response) {
@@ -347,11 +347,19 @@ public class OrderDetails extends AppCompatActivity {
                     if (response.code() == 200) {
                         Log.i("Create Order Request", "post submitted to API." + response.body().getMessage());
                         Log.d("Order Response", "onResponse: " + response.body().getOrders().getStatus());
+                        currentOrder.setStatus("Confirmed");
+                        ordersViewModel.update(currentOrder);
+                        if(currentOrder.getStatus().equals("Confirmed")) {
+                            confirm.setVisibility(View.GONE);
+                        } else
+                            confirm.setVisibility(View.VISIBLE);
+                        loading.endLoading();
                     }
                 } else {
                     if (response.code() == 401) {
                         APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
                         Log.i("Create Order Request", "post submitted to API." + message.getMessage());
+                        loading.endLoading();
                         Toast.makeText(OrderDetails.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
