@@ -1,23 +1,32 @@
 package com.encycode.sheetalfoods;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.encycode.sheetalfoods.entity.Orders;
 import com.encycode.sheetalfoods.helper.APIError;
 import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
 import com.encycode.sheetalfoods.helper.NotificationAdapter;
+import com.encycode.sheetalfoods.helper.ProgressLoading;
 import com.encycode.sheetalfoods.helper.request.Notification;
 import com.encycode.sheetalfoods.helper.request.NotificationModel;
 import com.encycode.sheetalfoods.helper.request.NotificationRequest;
 import com.encycode.sheetalfoods.helper.request.StaffOrderRequest;
+import com.encycode.sheetalfoods.viewmodels.NotificationsViewModel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -29,37 +38,77 @@ import retrofit2.Response;
 
 public class Notifications extends AppCompatActivity {
 
-    RecyclerView  recyclerView;
+    RecyclerView recyclerView;
     private APIService mAPIService;
     List<NotificationModel> notificationList;
     List<NotificationModel> notificationDeleteList;
+    Toolbar toolbar;
+    ProgressLoading loading;
+    NotificationsViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
+        loading = new ProgressLoading(Notifications.this);
         recyclerView = findViewById(R.id.notificationRV);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
+        NotificationAdapter adapter = new NotificationAdapter(this);
+        recyclerView.setAdapter(adapter);
+
+        toolbar = findViewById(R.id.toolbar);
+        getSupportActionBar().hide();
+        toolbar.setTitle("Notifications");
+        toolbar.setTitleTextColor(getColor(R.color.white));
+        toolbar.setBackgroundColor(getColor(R.color.buttonDefault));
+        setActionBar(toolbar);
+
         mAPIService = new ApiUtils(Notifications.this).getAPIService();
 
-        List<Notification> notifications = new ArrayList<>();
+        getNotification();
+        viewModel = ViewModelProviders.of(Notifications.this).get(NotificationsViewModel.class);
+        viewModel.getAllNotifications().observe(this, new Observer<List<com.encycode.sheetalfoods.entity.Notifications>>() {
+            @Override
+            public void onChanged(List<com.encycode.sheetalfoods.entity.Notifications> notifications) {
+                adapter.setNotifications(notifications);
+                //Toast.makeText(Notifications.this, "item count : "+adapter.getItemCount(), Toast.LENGTH_SHORT).show();
+                recyclerView.setAdapter(adapter);
+            }
+        });
 
-        notifications.add(new Notification("","Offer 1","A paragraph is a series of related sentences developing a central idea, called the topic. Try to think about paragraphs in terms of thematic unity: a paragraph is a sentence or a group of sentences that supports one central, unified idea. Paragraphs add one idea at a time to your broader argument."));
-        notifications.add(new Notification("","Offer 2","A paragraph is a series of related sentences developing a central idea, called the topic. Try to think about paragraphs in terms of thematic unity: a paragraph is a sentence or a group of sentences that supports one central, unified idea. Paragraphs add one idea at a time to your broader argument."));
-        notifications.add(new Notification("","Offer 3","A paragraph is a series of related sentences developing a central idea, called the topic. Try to think about paragraphs in terms of thematic unity: a paragraph is a sentence or a group of sentences that supports one central, unified idea. Paragraphs add one idea at a time to your broader argument."));
-        notifications.add(new Notification("","Offer 4","A paragraph is a series of related sentences developing a central idea, called the topic. Try to think about paragraphs in terms of thematic unity: a paragraph is a sentence or a group of sentences that supports one central, unified idea. Paragraphs add one idea at a time to your broader argument."));
-        notifications.add(new Notification("","Offer 5","A paragraph is a series of related sentences developing a central idea, called the topic. Try to think about paragraphs in terms of thematic unity: a paragraph is a sentence or a group of sentences that supports one central, unified idea. Paragraphs add one idea at a time to your broader argument."));
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
 
-        NotificationAdapter adapter = new NotificationAdapter(this);
-        adapter.setNotifications(notifications);
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                new AlertDialog.Builder(Notifications.this)
+                        .setTitle("Title")
+                        .setMessage("Do you really want to whatever?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-        recyclerView.setAdapter(adapter);
-//        getNotification();
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                deleteNotification(adapter.getNotificationAt(viewHolder.getAdapterPosition()));
+                                adapter.notifyDataSetChanged();
+                            }})
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                adapter.notifyDataSetChanged();
+                            }
+                        }).show();
+            }
+        }).attachToRecyclerView(recyclerView);
 //        deleteNotification(1);
     }
+
     public void getNotification() {
-//        loading.startLoading();
+        //loading.startLoading();
         mAPIService.NotificationGetRequest().enqueue(new Callback<NotificationRequest>() {
             @Override
             public void onResponse(Call<NotificationRequest> call, Response<NotificationRequest> response) {
@@ -68,18 +117,20 @@ public class Notifications extends AppCompatActivity {
                     if (response.code() == 200) {
                         Log.i("Create Order Request", "post submitted to API." + response.body().getMessage());
                         notificationList = response.body().getNotifications();
-                        for (int i=0;i<notificationList.size();i++){
-                            Long id = notificationList.get(i).getId();
+                        for (int i = 0; i < notificationList.size(); i++) {
+                            int id = notificationList.get(i).getId().intValue();
                             String title = notificationList.get(i).getTitle();
                             String description = notificationList.get(i).getDescription();
                             String image = notificationList.get(i).getImage();
-                            Long userId = notificationList.get(i).getUserId();
+                            int userId = notificationList.get(i).getUserId().intValue();
                             String createdAt = notificationList.get(i).getCreatedAt();
                             String updatedAt = notificationList.get(i).getUpdatedAt();
                             String deletedAt = notificationList.get(i).getDeletedAt();
-                            Log.i("log notification title", "onResponse: " + title);
+                            Log.i("log notification title", "onResponseNoti: " + title);
                             Log.i("log notification image", "onResponse: " + image);
                             Log.i("log notification userid", "onResponse: " + userId);
+                            viewModel.insert(new com.encycode.sheetalfoods.entity.Notifications(id, title, description, image, userId, createdAt, updatedAt, deletedAt));
+                            //loading.endLoading();
                         }
                     }
                 } else {
@@ -88,6 +139,7 @@ public class Notifications extends AppCompatActivity {
                         Log.i("Create Order Request", "post submitted to API." + message.getMessage());
 //                        loading.endLoading();
                         Toast.makeText(Notifications.this, message.getMessage(), Toast.LENGTH_SHORT).show();
+                        //loading.endLoading();
                     }
                 }
             }
@@ -100,8 +152,9 @@ public class Notifications extends AppCompatActivity {
         });
     }
 
-    public void deleteNotification(int id) {
-//        loading.startLoading();
+    public void deleteNotification(com.encycode.sheetalfoods.entity.Notifications notifications) {
+        //loading.startLoading();
+        int id = notifications.getId();
         mAPIService.DeleteNotificationRequest(id).enqueue(new Callback<NotificationRequest>() {
             @Override
             public void onResponse(Call<NotificationRequest> call, Response<NotificationRequest> response) {
@@ -110,7 +163,7 @@ public class Notifications extends AppCompatActivity {
                     if (response.code() == 200) {
                         Log.i("Delete Notifications", "post submitted to API." + response.body().getMessage());
                         notificationDeleteList = response.body().getNotifications();
-                        for (int i=0;i<notificationDeleteList.size();i++){
+                        for (int i = 0; i < notificationDeleteList.size(); i++) {
                             Long id = notificationDeleteList.get(i).getId();
                             String title = notificationDeleteList.get(i).getTitle();
                             String description = notificationDeleteList.get(i).getDescription();
@@ -122,7 +175,10 @@ public class Notifications extends AppCompatActivity {
                             Log.i("log notification title", "onResponse: " + title);
                             Log.i("log notification image", "onResponse: " + image);
                             Log.i("log notification userid", "onResponse: " + userId);
+                            notifications.setId(id.intValue());
+                            //loading.endLoading();
                         }
+                        viewModel.delete(notifications);
                     }
                 } else {
                     if (response.code() == 401) {
@@ -141,4 +197,5 @@ public class Notifications extends AppCompatActivity {
 
         });
     }
+
 }

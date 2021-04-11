@@ -87,6 +87,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     public void setOrderDetails(List<OrderDetails> orderDetails) {
         this.orderDetails = orderDetails;
+        notifyDataSetChanged();
     }
 
     public class ProductHolder extends RecyclerView.ViewHolder {

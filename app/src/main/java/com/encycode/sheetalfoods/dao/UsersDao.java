@@ -3,6 +3,7 @@ package com.encycode.sheetalfoods.dao;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.encycode.sheetalfoods.entity.Users;
@@ -12,7 +13,7 @@ import java.util.List;
 @Dao
 public interface UsersDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Users users);
 
     @Query("SELECT * FROM users")
