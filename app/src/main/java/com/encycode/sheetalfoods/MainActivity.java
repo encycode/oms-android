@@ -1,5 +1,6 @@
 package com.encycode.sheetalfoods;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -110,19 +112,16 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.logout:
-                        GetSharedPreferences loginShared = new GetSharedPreferences("LoginStatus", MainActivity.this);
-                        loginShared.setPrefString("name", "");
-                        loginShared.setPrefString("username", "");
-                        loginShared.setPrefString("role", "");
-                        loginShared.setPrefString("shop_name", "");
-                        loginShared.setPrefString("address", "");
-                        loginShared.setPrefString("mobile", "");
-                        loginShared.setPrefString("token", "");
-                        loginShared.setPrefString("token_type", "");
-                        loginShared.setPrefString("expires_at", "");
-                        loginShared.setPrefBoolean("isLogin", false);
-                        Intent k = new Intent(MainActivity.this, Login.class);
-                        startActivity(k);
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("Title")
+                                .setMessage("Do you really want to delete ?")
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        logout();
+                                    }})
+                                .setNegativeButton(android.R.string.no, null).show();
                         break;
                 }
                 return true;
@@ -247,6 +246,22 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("error", t.getMessage());
             }
         });
+    }
+
+    public void logout() {
+        GetSharedPreferences loginShared = new GetSharedPreferences("LoginStatus", MainActivity.this);
+        loginShared.setPrefString("name", "");
+        loginShared.setPrefString("username", "");
+        loginShared.setPrefString("role", "");
+        loginShared.setPrefString("shop_name", "");
+        loginShared.setPrefString("address", "");
+        loginShared.setPrefString("mobile", "");
+        loginShared.setPrefString("token", "");
+        loginShared.setPrefString("token_type", "");
+        loginShared.setPrefString("expires_at", "");
+        loginShared.setPrefBoolean("isLogin", false);
+        Intent k = new Intent(MainActivity.this, Login.class);
+        startActivity(k);
     }
 
     public void setDataAdapter(String name, String img, int status, String create, String update, String delete, int id) {

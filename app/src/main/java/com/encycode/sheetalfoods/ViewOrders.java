@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 import android.widget.Toolbar;
 import android.widget.ViewAnimator;
@@ -22,6 +24,7 @@ import com.encycode.sheetalfoods.helper.ViewOrdersAdapter;
 import com.encycode.sheetalfoods.helper.request.Order;
 import com.encycode.sheetalfoods.helper.request.OrderRequest;
 import com.encycode.sheetalfoods.viewmodels.OrdersViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,7 @@ public class ViewOrders extends AppCompatActivity {
     private static List<Orders> orderList;
     Toolbar toolbar;
     OrdersViewModel viewModel;
+    FloatingActionButton btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +55,18 @@ public class ViewOrders extends AppCompatActivity {
         toolbar.setBackgroundColor(getColor(R.color.buttonDefault));
         setActionBar(toolbar);
 
+        btn = findViewById(R.id.floatingActionButton2);
         ViewOrdersAdapter adapter = new ViewOrdersAdapter(this);
         //adapter.setAllOrders();
 
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ViewOrders.this,MainActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
         recyclerView = findViewById(R.id.viewOrderRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(ViewOrders.this));
         recyclerView.setHasFixedSize(true);

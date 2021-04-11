@@ -13,6 +13,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -45,7 +47,7 @@ public class Notifications extends AppCompatActivity {
     Toolbar toolbar;
     ProgressLoading loading;
     NotificationsViewModel viewModel;
-
+    TextView noNoti;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,7 @@ public class Notifications extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
+        noNoti = findViewById(R.id.noNotificationTv);
         NotificationAdapter adapter = new NotificationAdapter(this);
         recyclerView.setAdapter(adapter);
 
@@ -72,6 +75,10 @@ public class Notifications extends AppCompatActivity {
         viewModel.getAllNotifications().observe(this, new Observer<List<com.encycode.sheetalfoods.entity.Notifications>>() {
             @Override
             public void onChanged(List<com.encycode.sheetalfoods.entity.Notifications> notifications) {
+                if(notifications.size() == 0){
+                   noNoti.setVisibility(View.VISIBLE);
+                   recyclerView.setVisibility(View.GONE);
+                }
                 adapter.setNotifications(notifications);
                 //Toast.makeText(Notifications.this, "item count : "+adapter.getItemCount(), Toast.LENGTH_SHORT).show();
                 recyclerView.setAdapter(adapter);
@@ -88,7 +95,7 @@ public class Notifications extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 new AlertDialog.Builder(Notifications.this)
                         .setTitle("Title")
-                        .setMessage("Do you really want to whatever?")
+                        .setMessage("Do you really want to delete ?")
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
@@ -160,6 +167,7 @@ public class Notifications extends AppCompatActivity {
             public void onResponse(Call<NotificationRequest> call, Response<NotificationRequest> response) {
 
                 if (response.isSuccessful()) {
+                    viewModel.delete(notifications);
                     if (response.code() == 200) {
                         Log.i("Delete Notifications", "post submitted to API." + response.body().getMessage());
                         notificationDeleteList = response.body().getNotifications();
@@ -175,10 +183,7 @@ public class Notifications extends AppCompatActivity {
                             Log.i("log notification title", "onResponse: " + title);
                             Log.i("log notification image", "onResponse: " + image);
                             Log.i("log notification userid", "onResponse: " + userId);
-                            notifications.setId(id.intValue());
-                            //loading.endLoading();
                         }
-                        viewModel.delete(notifications);
                     }
                 } else {
                     if (response.code() == 401) {

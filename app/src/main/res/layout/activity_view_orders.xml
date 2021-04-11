@@ -1,25 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundDefault"
-    tools:context=".ViewOrders"
-    android:orientation="vertical">
+    android:gravity="center"
+    tools:context=".ViewOrders">
 
     <Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginBottom="10dp" />
-
+        android:layout_marginBottom="10dp"
+        android:gravity="center" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/viewOrderRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/view_orders_rv_designm"
-        android:id="@+id/viewOrderRecyclerView" />
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="30dp" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/noOrdersTv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No Orders"
+        android:textColor="@color/buttonDefault"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/buttonDefault"
+        android:clickable="true"
+        app:srcCompat="@drawable/add_order" />
+
+
+</RelativeLayout>
