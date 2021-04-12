@@ -1,6 +1,7 @@
 package com.encycode.sheetalfoods.helper;
 
 import com.encycode.sheetalfoods.helper.request.CategoryRequest;
+import com.encycode.sheetalfoods.helper.request.ForgotPasswordRequest;
 import com.encycode.sheetalfoods.helper.request.NotificationRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsDeleteRequest;
 import com.encycode.sheetalfoods.helper.request.OrderDetailsEditRequest;
@@ -84,4 +85,9 @@ public interface APIService {
     @FormUrlEncoded
     @PUT("/api/order-details/edit")
     Call<OrderDetailsEditRequest> OrderDetailsEditRequest(@Field("id") int id);
+
+    @Headers({"Accept: application/json"})
+    @FormUrlEncoded
+    @PUT("/api/users/edit")
+    Call<ForgotPasswordRequest> ForgotPasswordRequest(@Field("password") String password);
 }

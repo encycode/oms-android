@@ -14,10 +14,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.encycode.sheetalfoods.helper.APIError;
+import com.encycode.sheetalfoods.helper.APIService;
+import com.encycode.sheetalfoods.helper.ApiUtils;
 import com.encycode.sheetalfoods.helper.GetSharedPreferences;
 import com.encycode.sheetalfoods.helper.ProgressLoading;
+import com.encycode.sheetalfoods.helper.request.ForgotPasswordRequest;
+import com.encycode.sheetalfoods.helper.request.Product;
+import com.encycode.sheetalfoods.helper.request.StaffOrderRequest;
+import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -26,6 +38,8 @@ public class ProfileActivity extends AppCompatActivity {
     GetSharedPreferences loginShared;
     Dialog dialog;
     Toolbar toolbar;
+    APIService mAPIService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +49,9 @@ public class ProfileActivity extends AppCompatActivity {
         intialise();
         setData();
 
+        mAPIService = new ApiUtils(ProfileActivity.this).getAPIService();
 
+        sendPost("12345678");
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,8 +165,8 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(oldPassError.getVisibility() != View.VISIBLE && newPassError.getVisibility() != View.VISIBLE && confPassError.getVisibility() != View.VISIBLE) {
-                    changePassword(newPass.getText().toString());
-                    dialog.dismiss();
+//                    changePassword(newPass.getText().toString());
+//                    dialog.dismiss();
                 }
             }
         });
@@ -202,5 +218,40 @@ public class ProfileActivity extends AppCompatActivity {
         loginShared.setPrefBoolean("isLogin", false);
         Intent k = new Intent(ProfileActivity.this, Login.class);
         startActivity(k);
+    }
+    public void sendPost(String pass) {
+        //loading.startLoading();
+        mAPIService.ForgotPasswordRequest(pass).enqueue(new Callback<ForgotPasswordRequest>() {
+            @Override
+            public void onResponse(Call<ForgotPasswordRequest> call, Response<ForgotPasswordRequest> response) {
+
+                if (response.isSuccessful()) {
+//                    Toast.makeText(StaffCreateOrder.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                    if (response.code() == 201) {
+                        Log.d("Password changed", "onResponse: " + response.body().getMessage());
+                        Toast.makeText(ProfileActivity.this, " Password Changed", Toast.LENGTH_SHORT).show();
+                    }
+                    if (response.code() == 200) {
+                        Log.d("Password changed", "onResponse: " + response.body().getMessage());
+                        Toast.makeText(ProfileActivity.this, " Password Changed", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (response.code() == 401) {
+                        APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
+                        Log.i("Create Order Request", "post submitted to API." + message.getMessage());
+                        //loading.endLoading();
+                        Toast.makeText(ProfileActivity.this, message.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ForgotPasswordRequest> call, Throwable t) {
+                Log.e("error", t.getMessage());
+                Toast.makeText(ProfileActivity.this, "hello", Toast.LENGTH_SHORT).show();
+                //loading.endLoading();
+            }
+
+        });
     }
 }

@@ -222,25 +222,26 @@ public class StaffCreateOrder extends AppCompatActivity {
 
     public void sendPost(int receiver_client, String shop_name, String address, String mobile, String orderby, int category) {
         //loading.startLoading();
-        mAPIService.OrderStaffPostRequest(receiver_client, shop_name, mobile, address, orderby, category).enqueue(new Callback<StaffOrderRequest>() {
+        Log.d("init val", "onResponse: " + receiver_client + ","+ shop_name+","+address+","+mobile+","+orderby+","+category);
+        mAPIService.OrderStaffPostRequest(1, shop_name, mobile, address, orderby, category).enqueue(new Callback<StaffOrderRequest>() {
             @Override
             public void onResponse(Call<StaffOrderRequest> call, Response<StaffOrderRequest> response) {
 
                 if (response.isSuccessful()) {
+//                    Toast.makeText(StaffCreateOrder.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                     if (response.code() == 200) {
-                        //Toast.makeText(StaffCreateOrder.this, "Inserted", Toast.LENGTH_SHORT).show();
                         Log.i("Create Order Request", "post submitted to API." + response.body().getMessage());
                         Log.d("Order Response", "onResponse: " + response.body().getOrders().getOrderby());
                         Log.d("staff Test", "onResponseOrder: " + response.body().getOrders().getId());
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getShopName());
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getAddress());
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getMobile());
-                        orders = new Orders(response.body().getOrders().getId().intValue(), response.body().getOrders().getSenderClientid().intValue(), response.body().getOrders().getReceiverClientid().intValue(), response.body().getOrders().getShopName(), response.body().getOrders().getAddress(), response.body().getOrders().getMobile(), response.body().getOrders().getOrderby(), response.body().getOrders().getCategoryId().intValue(), response.body().getOrders().getStatus(), response.body().getOrders().getOrderNumber(), response.body().getOrders().getUserId().intValue(), response.body().getOrders().getCreatedAt(), response.body().getOrders().getUpdatedAt(), response.body().getOrders().getDeletedAt());
-                        ordersViewModel.insert(orders);
-                        Intent i = new Intent(StaffCreateOrder.this, ViewOrders.class);
-                        i.putExtra("currentOrder", orders);
+//                        orders = new Orders(response.body().getOrders().getId().intValue(), response.body().getOrders().getSenderClientid().intValue(), response.body().getOrders().getReceiverClientid().intValue(), response.body().getOrders().getShopName(), response.body().getOrders().getAddress(), response.body().getOrders().getMobile(), response.body().getOrders().getOrderby(), response.body().getOrders().getCategoryId().intValue(), response.body().getOrders().getStatus(), response.body().getOrders().getOrderNumber(), response.body().getOrders().getUserId().intValue(), response.body().getOrders().getCreatedAt(), response.body().getOrders().getUpdatedAt(), response.body().getOrders().getDeletedAt());
+//                        ordersViewModel.insert(orders);
+//                        Intent i = new Intent(StaffCreateOrder.this, ViewOrders.class);
+//                        i.putExtra("currentOrder", orders);
                         //loading.endLoading();
-                        startActivity(i);
+//                        startActivity(i);
                         finish();
                     }
                 } else {
