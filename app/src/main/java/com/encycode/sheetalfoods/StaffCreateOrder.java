@@ -44,16 +44,17 @@ public class StaffCreateOrder extends AppCompatActivity {
     private TextInputLayout textInputLayout;
     Button btnCreateStaffOrder;
     private APIService mAPIService;
-    EditText shopName,mobile,address;
+    EditText shopName, mobile, address;
     int dealerId = -1;
     UsersViewModel usersViewModel;
     OrdersViewModel ordersViewModel;
-    TextView shopNameError,mobileError,addressError;
+    TextView shopNameError, mobileError, addressError;
     ArrayList<String> dealerNames = new ArrayList<>();
     ArrayList<Integer> dealerIds = new ArrayList<>();
     ProgressLoading loading;
     Orders orders;
     boolean isDone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +89,7 @@ public class StaffCreateOrder extends AppCompatActivity {
         usersViewModel.getAllUsersByRole("dealer").observe(this, new Observer<List<Users>>() {
             @Override
             public void onChanged(List<Users> users) {
-                for(int i=0;i<users.size();i++) {
+                for (int i = 0; i < users.size(); i++) {
                     dealerNames.add(users.get(i).getName());
                     dealerIds.add(users.get(i).getId());
                 }
@@ -96,8 +97,7 @@ public class StaffCreateOrder extends AppCompatActivity {
         });
 
 
-
-        int catId = i.getIntExtra("cat_id",-1);
+        int catId = i.getIntExtra("cat_id", -1);
 
         mAPIService = new ApiUtils(StaffCreateOrder.this).getAPIService();
 
@@ -121,14 +121,14 @@ public class StaffCreateOrder extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 dealerName.clearFocus();
-                for(int i=0;i<dealerNames.size();i++) {
-                    if(s.toString().equals(dealerNames.get(i))) {
+                for (int i = 0; i < dealerNames.size(); i++) {
+                    if (s.toString().equals(dealerNames.get(i))) {
                         dealerId = i;
                         //Toast.makeText(StaffCreateOrder.this, ""+dealerIds.get(dealerId), Toast.LENGTH_SHORT).show();
                     }
                 }
-                Toast.makeText(StaffCreateOrder.this, ""+dealerId, Toast.LENGTH_SHORT).show();
-                if(dealerId != -1) {
+                //Toast.makeText(StaffCreateOrder.this, "" + dealerId, Toast.LENGTH_SHORT).show();
+                if (dealerId != -1) {
                     usersViewModel.getUserById(dealerIds.get(dealerId)).observe(StaffCreateOrder.this, new Observer<List<Users>>() {
                         @Override
                         public void onChanged(List<Users> users) {
@@ -145,8 +145,7 @@ public class StaffCreateOrder extends AppCompatActivity {
         dealerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus)
-                {
+                if (!hasFocus) {
                     dealerName.clearFocus();
                 }
             }
@@ -155,8 +154,8 @@ public class StaffCreateOrder extends AppCompatActivity {
         shopName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    if(shopName.getText().toString().equals("")) {
+                if (!hasFocus) {
+                    if (shopName.getText().toString().equals("")) {
                         shopNameError.setVisibility(View.VISIBLE);
                         isDone = false;
                     } else {
@@ -170,8 +169,8 @@ public class StaffCreateOrder extends AppCompatActivity {
         mobile.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    if(mobile.getText().toString().length() < 10) {
+                if (!hasFocus) {
+                    if (mobile.getText().toString().length() < 10) {
                         mobileError.setVisibility(View.VISIBLE);
                         isDone = false;
                     } else {
@@ -185,8 +184,8 @@ public class StaffCreateOrder extends AppCompatActivity {
         address.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    if(address.getText().toString().equals("")) {
+                if (!hasFocus) {
+                    if (address.getText().toString().equals("")) {
                         addressError.setVisibility(View.VISIBLE);
                         isDone = false;
                     } else {
@@ -200,41 +199,47 @@ public class StaffCreateOrder extends AppCompatActivity {
         btnCreateStaffOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(address.getText().toString().equals("")) {
+                if (address.getText().toString().equals("")) {
                     addressError.setVisibility(View.VISIBLE);
                     isDone = false;
-                }if(mobile.getText().toString().length() < 10) {
+                }
+                if (mobile.getText().toString().length() < 10) {
                     mobileError.setVisibility(View.VISIBLE);
                     isDone = false;
-                }if(shopName.getText().toString().equals("")) {
+                }
+                if (shopName.getText().toString().equals("")) {
                     shopNameError.setVisibility(View.VISIBLE);
                     isDone = false;
                 } else {
-                    if(isDone)
+                    if (isDone) {
                         sendPost(dealerId, shopName.getText().toString(), address.getText().toString(), mobile.getText().toString(), "staff", catId);
+                        //Toast.makeText(StaffCreateOrder.this, "hii", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
     }
+
     public void sendPost(int receiver_client, String shop_name, String address, String mobile, String orderby, int category) {
-        loading.startLoading();
+        //loading.startLoading();
         mAPIService.OrderStaffPostRequest(receiver_client, shop_name, mobile, address, orderby, category).enqueue(new Callback<StaffOrderRequest>() {
             @Override
             public void onResponse(Call<StaffOrderRequest> call, Response<StaffOrderRequest> response) {
 
                 if (response.isSuccessful()) {
                     if (response.code() == 200) {
+                        //Toast.makeText(StaffCreateOrder.this, "Inserted", Toast.LENGTH_SHORT).show();
                         Log.i("Create Order Request", "post submitted to API." + response.body().getMessage());
                         Log.d("Order Response", "onResponse: " + response.body().getOrders().getOrderby());
-                        Log.d("staff Test", "onResponse: " + response.body().getOrders().getId());
+                        Log.d("staff Test", "onResponseOrder: " + response.body().getOrders().getId());
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getShopName());
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getAddress());
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getMobile());
-                        orders = new Orders(response.body().getOrders().getId().intValue(),response.body().getOrders().getSenderClientid().intValue(),response.body().getOrders().getReceiverClientid().intValue(),response.body().getOrders().getShopName(),response.body().getOrders().getAddress(),response.body().getOrders().getMobile(),response.body().getOrders().getOrderby(),response.body().getOrders().getCategoryId().intValue(),response.body().getOrders().getStatus(),response.body().getOrders().getOrderNumber(),response.body().getOrders().getUserId().intValue(),response.body().getOrders().getCreatedAt(),response.body().getOrders().getUpdatedAt(),response.body().getOrders().getDeletedAt());
+                        orders = new Orders(response.body().getOrders().getId().intValue(), response.body().getOrders().getSenderClientid().intValue(), response.body().getOrders().getReceiverClientid().intValue(), response.body().getOrders().getShopName(), response.body().getOrders().getAddress(), response.body().getOrders().getMobile(), response.body().getOrders().getOrderby(), response.body().getOrders().getCategoryId().intValue(), response.body().getOrders().getStatus(), response.body().getOrders().getOrderNumber(), response.body().getOrders().getUserId().intValue(), response.body().getOrders().getCreatedAt(), response.body().getOrders().getUpdatedAt(), response.body().getOrders().getDeletedAt());
                         ordersViewModel.insert(orders);
-                        Intent i = new Intent(StaffCreateOrder.this,ViewOrders.class);
-                        i.putExtra("currentOrder",orders);
-                        loading.endLoading();
+                        Intent i = new Intent(StaffCreateOrder.this, ViewOrders.class);
+                        i.putExtra("currentOrder", orders);
+                        //loading.endLoading();
                         startActivity(i);
                         finish();
                     }
@@ -242,7 +247,7 @@ public class StaffCreateOrder extends AppCompatActivity {
                     if (response.code() == 401) {
                         APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
                         Log.i("Create Order Request", "post submitted to API." + message.getMessage());
-                        loading.endLoading();
+                        //loading.endLoading();
                         Toast.makeText(StaffCreateOrder.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -251,6 +256,8 @@ public class StaffCreateOrder extends AppCompatActivity {
             @Override
             public void onFailure(Call<StaffOrderRequest> call, Throwable t) {
                 Log.e("error", t.getMessage());
+                Toast.makeText(StaffCreateOrder.this, "hello", Toast.LENGTH_SHORT).show();
+                //loading.endLoading();
             }
 
         });

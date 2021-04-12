@@ -12,6 +12,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -56,6 +57,7 @@ public class OrderDetails extends AppCompatActivity {
     Toolbar toolbar;
     List<ProductTypes> productTypesList = new ArrayList<>();
 
+    LinearLayout headerLayout;
 
     boolean isDone;
     ProductsViewModel productsViewModel;
@@ -82,6 +84,7 @@ public class OrderDetails extends AppCompatActivity {
         mAPIService = new ApiUtils(this).getAPIService();
 
 
+        headerLayout = findViewById(R.id.tableHeader);
         ordersViewModel = new OrdersViewModel(getApplication());
 
         productsViewModel = ViewModelProviders.of(this).get(ProductsViewModel.class);
@@ -101,13 +104,26 @@ public class OrderDetails extends AppCompatActivity {
 
         button = findViewById(R.id.floatingActionButton);
 
+
         currentOrder = (Orders) getIntent().getSerializableExtra("currentOrder");
+        ProductsAdapter adapter = new ProductsAdapter(OrderDetails.this, currentOrder.getId());
         orderDetailsViewModel = ViewModelProviders.of(this).get(OrderDetailsViewModel.class);
         orderDetailsViewModel.getSpecificOrderDetails(currentOrder.getId()).observe(this, new Observer<List<com.encycode.sheetalfoods.entity.OrderDetails>>() {
             @Override
             public void onChanged(List<com.encycode.sheetalfoods.entity.OrderDetails> orderDetails) {
                 //Toast.makeText(OrderDetails.this, "" + orderDetails.size(), Toast.LENGTH_SHORT).show();
-                orderDetailsFinal.addAll(orderDetails);
+                adapter.setOrderDetails(orderDetails);
+                adapter.notifyDataSetChanged();
+                if(confirm.getVisibility() == View.GONE) {
+                    confirm.setVisibility(View.VISIBLE);
+                }
+                if(headerLayout.getVisibility() == View.GONE) {
+                    headerLayout.setVisibility(View.VISIBLE);
+                }
+                if(adapter.getItemCount() == 0) {
+                    confirm.setVisibility(View.GONE);
+                    headerLayout.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -123,9 +139,8 @@ public class OrderDetails extends AppCompatActivity {
         shopNameTv.setText(currentOrder.getShopName());
 
 
-        ProductsAdapter adapter = new ProductsAdapter(OrderDetails.this, currentOrder.getId());
+
 //        Toast.makeText(this, ""+orderDetailsFinal.size(), Toast.LENGTH_SHORT).show();
-        adapter.setOrderDetails(orderDetailsFinal);
         recyclerView.setAdapter(adapter);
 
         if (currentOrder.getStatus().equals("Confirmed")) {
@@ -243,7 +258,7 @@ public class OrderDetails extends AppCompatActivity {
                                 productTypeError.setVisibility(View.VISIBLE);
                                 isDone = false;
                             } else {
-                                productTypeError.setVisibility(View.GONE);
+//                                productTypeError.setVisibility(View.GONE);
                                 isDone = true;
                             }
                         }
@@ -259,7 +274,7 @@ public class OrderDetails extends AppCompatActivity {
                                 productError.setVisibility(View.VISIBLE);
                                 isDone = false;
                             } else {
-                                productError.setVisibility(View.GONE);
+//                                productError.setVisibility(View.GONE);
                                 isDone = true;
                             }
                         }
@@ -285,7 +300,7 @@ public class OrderDetails extends AppCompatActivity {
                                 caretError.setVisibility(View.VISIBLE);
                                 isDone = true;
                             } else {
-                                caretError.setVisibility(View.GONE);
+               //                 caretError.setVisibility(View.GONE);
                                 isDone = true;
                             }
                         }
@@ -392,7 +407,7 @@ public class OrderDetails extends AppCompatActivity {
                         Log.i("Create Order Request", "post submitted to API." + response.body().getMessage());
                         Log.d("Order Response", "onResponse: " + response.body().getProduct().getCaratOrder());
                         orderDetailsViewModel.insert(new com.encycode.sheetalfoods.entity.OrderDetails(response.body().getProduct().getId().intValue(), currentOrder.getId(), carat_order, productsList.get(selectedProductId).getCaretPrice(), productsList.get(selectedProductId).getId()));
-                        loading.endLoading();
+//                        loading.endLoading();
                     }
                 } else {
                     if (response.code() == 401) {

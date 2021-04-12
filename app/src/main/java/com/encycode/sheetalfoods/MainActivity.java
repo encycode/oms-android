@@ -111,11 +111,16 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(j);
                         break;
 
+                    case R.id.profile:
+                        Intent k = new Intent(MainActivity.this,ProfileActivity.class);
+                        startActivity(k);
+                        break;
+
                     case R.id.logout:
                         new AlertDialog.Builder(MainActivity.this)
-                                .setTitle("Title")
-                                .setMessage("Do you really want to delete ?")
-                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle("Log Out")
+                                .setMessage("Do you really want to Log Out ?")
+                                .setIcon(R.drawable.logout)
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                                     public void onClick(DialogInterface dialog, int whichButton) {
