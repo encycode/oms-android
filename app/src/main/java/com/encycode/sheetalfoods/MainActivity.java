@@ -260,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
         loginShared.setPrefString("role", "");
         loginShared.setPrefString("shop_name", "");
         loginShared.setPrefString("address", "");
+        loginShared.setPrefString("password", "");
         loginShared.setPrefString("mobile", "");
         loginShared.setPrefString("token", "");
         loginShared.setPrefString("token_type", "");
@@ -267,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
         loginShared.setPrefBoolean("isLogin", false);
         Intent k = new Intent(MainActivity.this, Login.class);
         startActivity(k);
+        finish();
     }
 
     public void setDataAdapter(String name, String img, int status, String create, String update, String delete, int id) {

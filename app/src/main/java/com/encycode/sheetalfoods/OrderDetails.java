@@ -1,6 +1,8 @@
 package com.encycode.sheetalfoods;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -114,13 +117,13 @@ public class OrderDetails extends AppCompatActivity {
                 //Toast.makeText(OrderDetails.this, "" + orderDetails.size(), Toast.LENGTH_SHORT).show();
                 adapter.setOrderDetails(orderDetails);
                 adapter.notifyDataSetChanged();
-                if(confirm.getVisibility() == View.GONE) {
+                if (confirm.getVisibility() == View.GONE) {
                     confirm.setVisibility(View.VISIBLE);
                 }
-                if(headerLayout.getVisibility() == View.GONE) {
+                if (headerLayout.getVisibility() == View.GONE) {
                     headerLayout.setVisibility(View.VISIBLE);
                 }
-                if(adapter.getItemCount() == 0) {
+                if (adapter.getItemCount() == 0) {
                     confirm.setVisibility(View.GONE);
                     headerLayout.setVisibility(View.GONE);
                 }
@@ -139,7 +142,6 @@ public class OrderDetails extends AppCompatActivity {
         shopNameTv.setText(currentOrder.getShopName());
 
 
-
 //        Toast.makeText(this, ""+orderDetailsFinal.size(), Toast.LENGTH_SHORT).show();
         recyclerView.setAdapter(adapter);
 
@@ -151,7 +153,16 @@ public class OrderDetails extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToggleStatus(currentOrder.getId());
+                new AlertDialog.Builder(OrderDetails.this)
+                        .setTitle("Confirm Order?")
+                        .setMessage("Do you really want to confirm this order?")
+                        .setIcon(R.drawable.order)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                ToggleStatus(currentOrder.getId());
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
             }
         });
 
@@ -258,7 +269,9 @@ public class OrderDetails extends AppCompatActivity {
                                 productTypeError.setVisibility(View.VISIBLE);
                                 isDone = false;
                             } else {
-//                                productTypeError.setVisibility(View.GONE);
+                                if (productTypeError.getVisibility() == View.VISIBLE) {
+                                    productTypeError.setVisibility(View.GONE);
+                                }
                                 isDone = true;
                             }
                         }
@@ -274,7 +287,9 @@ public class OrderDetails extends AppCompatActivity {
                                 productError.setVisibility(View.VISIBLE);
                                 isDone = false;
                             } else {
-//                                productError.setVisibility(View.GONE);
+                                if (productError.getVisibility() == View.VISIBLE) {
+                                    productError.setVisibility(View.GONE);
+                                }
                                 isDone = true;
                             }
                         }
@@ -300,7 +315,10 @@ public class OrderDetails extends AppCompatActivity {
                                 caretError.setVisibility(View.VISIBLE);
                                 isDone = true;
                             } else {
-               //                 caretError.setVisibility(View.GONE);
+                                if (caretError.getVisibility() == View.VISIBLE) {
+                                    caretError.setVisibility(View.GONE);
+
+                                }
                                 isDone = true;
                             }
                         }
@@ -386,8 +404,8 @@ public class OrderDetails extends AppCompatActivity {
                             productTypeError.setVisibility(View.VISIBLE);
                             isDone = false;
                         } else {
-                            if(isDone)
-                            sendPost(currentOrder.getId(), productsList.get(selectedProductId).getId(), Integer.parseInt(caretOrder.getText().toString()));
+                            if (isDone)
+                                sendPost(currentOrder.getId(), productsList.get(selectedProductId).getId(), Integer.parseInt(caretOrder.getText().toString()));
                             addProduct.dismiss();
                         }
                     }
@@ -440,9 +458,13 @@ public class OrderDetails extends AppCompatActivity {
                         ordersViewModel.update(currentOrder);
                         if (currentOrder.getStatus().equals("Confirmed")) {
                             confirm.setVisibility(View.GONE);
-                        } else
+                        } else {
                             confirm.setVisibility(View.VISIBLE);
+                        }
                         loading.endLoading();
+                        Intent i = new Intent(OrderDetails.this, ViewOrders.class);
+                        startActivity(i);
+                        finish();
                     }
                 } else {
                     if (response.code() == 401) {

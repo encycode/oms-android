@@ -156,6 +156,7 @@ public class Login extends AppCompatActivity {
                         GetSharedPreferences loginShared = new GetSharedPreferences("LoginStatus", Login.this);
                         loginShared.setPrefString("name", response.body().getName());
                         loginShared.setPrefString("username", response.body().getUsername());
+                        loginShared.setPrefString("password",pass);
                         loginShared.setPrefString("role", response.body().getRole());
                         loginShared.setPrefString("shop_name", response.body().getShopName());
                         loginShared.setPrefString("address", response.body().getAddress());

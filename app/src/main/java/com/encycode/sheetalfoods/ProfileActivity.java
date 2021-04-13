@@ -1,8 +1,5 @@
 package com.encycode.sheetalfoods;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,14 +14,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.encycode.sheetalfoods.helper.APIError;
 import com.encycode.sheetalfoods.helper.APIService;
 import com.encycode.sheetalfoods.helper.ApiUtils;
 import com.encycode.sheetalfoods.helper.GetSharedPreferences;
 import com.encycode.sheetalfoods.helper.ProgressLoading;
 import com.encycode.sheetalfoods.helper.request.ForgotPasswordRequest;
-import com.encycode.sheetalfoods.helper.request.Product;
-import com.encycode.sheetalfoods.helper.request.StaffOrderRequest;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -33,13 +31,15 @@ import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    TextView userFullName,userRole,shpName,address,mobile;
-    Button changePass,logout;
+    TextView userFullName, userRole, shpName, address, mobile;
+    Button changePass, logout;
     GetSharedPreferences loginShared;
     Dialog dialog;
     Toolbar toolbar;
     APIService mAPIService;
-
+    ProgressLoading loading;
+    String confpass;
+    String newpass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         mAPIService = new ApiUtils(ProfileActivity.this).getAPIService();
 
-        sendPost("12345678");
+        //sendPost("12345678");
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +64,8 @@ public class ProfileActivity extends AppCompatActivity {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 logout();
-                            }})
+                            }
+                        })
                         .setNegativeButton(android.R.string.no, null).show();
             }
         });
@@ -99,8 +100,8 @@ public class ProfileActivity extends AppCompatActivity {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(lp);
 
-        EditText oldPass,newPass,confPass;
-        TextView oldPassError,newPassError,confPassError;
+        EditText oldPass, newPass, confPass;
+        TextView oldPassError, newPassError, confPassError;
         Button change;
         ImageButton close;
 
@@ -119,11 +120,11 @@ public class ProfileActivity extends AppCompatActivity {
         oldPass.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    if(oldPass.getText().toString().length() < 8) {
+                if (!hasFocus) {
+                    if (oldPass.getText().toString().length() < 8) {
                         oldPassError.setVisibility(View.VISIBLE);
                     } else {
-                        if(oldPassError.getVisibility() == View.VISIBLE) {
+                        if (oldPassError.getVisibility() == View.VISIBLE) {
                             oldPassError.setVisibility(View.GONE);
                         }
                     }
@@ -134,11 +135,11 @@ public class ProfileActivity extends AppCompatActivity {
         newPass.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    if(newPass.getText().toString().length() < 8) {
+                if (!hasFocus) {
+                    if (newPass.getText().toString().length() < 8) {
                         newPassError.setVisibility(View.VISIBLE);
                     } else {
-                        if(newPassError.getVisibility() == View.VISIBLE) {
+                        if (newPassError.getVisibility() == View.VISIBLE) {
                             newPassError.setVisibility(View.GONE);
                         }
                     }
@@ -149,11 +150,14 @@ public class ProfileActivity extends AppCompatActivity {
         confPass.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    if(confPass.getText().toString().equals(newPass.getText().toString())) {
+                confpass = confPass.getText().toString();
+                newpass = newPass.getText().toString();
+                //Toast.makeText(ProfileActivity.this, confpass+"  "+newpass, Toast.LENGTH_SHORT).show();
+                if (!hasFocus) {
+                    if (!confpass.equals(newpass)) {
                         confPassError.setVisibility(View.VISIBLE);
                     } else {
-                        if(confPassError.getVisibility() == View.VISIBLE) {
+                        if (confPassError.getVisibility() == View.VISIBLE) {
                             confPassError.setVisibility(View.GONE);
                         }
                     }
@@ -164,9 +168,23 @@ public class ProfileActivity extends AppCompatActivity {
         change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(oldPassError.getVisibility() != View.VISIBLE && newPassError.getVisibility() != View.VISIBLE && confPassError.getVisibility() != View.VISIBLE) {
-//                    changePassword(newPass.getText().toString());
-//                    dialog.dismiss();
+
+                if (oldPass.getText().toString().length() < 8) {
+                    oldPassError.setVisibility(View.VISIBLE);
+                }
+                if (newPass.getText().toString().length() < 8) {
+                    newPassError.setVisibility(View.VISIBLE);
+                }
+                if (!confpass.equals(newpass)) {
+                    confPassError.setVisibility(View.VISIBLE);
+                } else {
+                    if(loginShared.getPrefString("password").equals(oldPass.getText().toString())) {
+                        sendPost(newPass.getText().toString());
+                        dialog.dismiss();
+                        logout();
+                    } else {
+                        Toast.makeText(ProfileActivity.this, "Wrong Old Password", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -180,12 +198,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-    private void changePassword(String toString) {
-    }
-
     private void intialise() {
 
-        userFullName= findViewById(R.id.userFullName);
+        userFullName = findViewById(R.id.userFullName);
         userRole = findViewById(R.id.userRole);
         shpName = findViewById(R.id.userShopName);
         mobile = findViewById(R.id.userMobile);
@@ -193,6 +208,7 @@ public class ProfileActivity extends AppCompatActivity {
         changePass = findViewById(R.id.changePassword);
         logout = findViewById(R.id.logoutBtn);
         loginShared = new GetSharedPreferences("LoginStatus", ProfileActivity.this);
+        loading = new ProgressLoading(ProfileActivity.this);
     }
 
     public void setData() {
@@ -213,14 +229,17 @@ public class ProfileActivity extends AppCompatActivity {
         loginShared.setPrefString("address", "");
         loginShared.setPrefString("mobile", "");
         loginShared.setPrefString("token", "");
+        loginShared.setPrefString("password", "");
         loginShared.setPrefString("token_type", "");
         loginShared.setPrefString("expires_at", "");
         loginShared.setPrefBoolean("isLogin", false);
         Intent k = new Intent(ProfileActivity.this, Login.class);
         startActivity(k);
+        finish();
     }
+
     public void sendPost(String pass) {
-        //loading.startLoading();
+        loading.startLoading();
         mAPIService.ForgotPasswordRequest(pass).enqueue(new Callback<ForgotPasswordRequest>() {
             @Override
             public void onResponse(Call<ForgotPasswordRequest> call, Response<ForgotPasswordRequest> response) {
@@ -230,16 +249,18 @@ public class ProfileActivity extends AppCompatActivity {
                     if (response.code() == 201) {
                         Log.d("Password changed", "onResponse: " + response.body().getMessage());
                         Toast.makeText(ProfileActivity.this, " Password Changed", Toast.LENGTH_SHORT).show();
+                        loading.endLoading();
                     }
                     if (response.code() == 200) {
                         Log.d("Password changed", "onResponse: " + response.body().getMessage());
+                        loading.endLoading();
                         Toast.makeText(ProfileActivity.this, " Password Changed", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     if (response.code() == 401) {
                         APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
                         Log.i("Create Order Request", "post submitted to API." + message.getMessage());
-                        //loading.endLoading();
+                        loading.endLoading();
                         Toast.makeText(ProfileActivity.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }

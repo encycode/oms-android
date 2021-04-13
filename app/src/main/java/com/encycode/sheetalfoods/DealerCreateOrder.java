@@ -91,8 +91,7 @@ public class DealerCreateOrder extends AppCompatActivity {
                         orders = new Orders(response.body().getOrders().getId(),response.body().getOrders().getSenderClientid(),response.body().getOrders().getReceiverClientid(),response.body().getOrders().getShopName(),response.body().getOrders().getAddress(),response.body().getOrders().getMobile(),response.body().getOrders().getOrderby(),response.body().getOrders().getCategoryId(),response.body().getOrders().getStatus(),response.body().getOrders().getOrderNumber(),response.body().getOrders().getUserId(),response.body().getOrders().getCreatedAt(),response.body().getOrders().getUpdatedAt(),response.body().getOrders().getDeletedAt());
                         viewModel.insert(orders);
                         loading.endLoading();
-                        dialogBoxDisplay("Order Place Successfully \n Your Order Number is : "+response.body().getOrders().getOrderNumber(),"Order",DealerCreateOrder.this);
-
+                        intentToOrderDetails();
                     }
                 } else {
                     if (response.code() == 401) {
@@ -110,23 +109,6 @@ public class DealerCreateOrder extends AppCompatActivity {
             }
 
         });
-    }
-
-    public void dialogBoxDisplay(String msg, String title, Context c) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c);
-        alertDialogBuilder.setTitle(title);
-        alertDialogBuilder
-                .setMessage(msg)
-                .setCancelable(true)
-                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        intentToOrderDetails();
-                    }
-                });
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
     }
 
     public void intentToOrderDetails() {

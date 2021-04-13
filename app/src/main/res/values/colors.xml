@@ -7,10 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="backgroundDefault">#8FBD6F</color>
+    <color name="backgroundDefault">#F1E089</color>
     <color name="cardViewDefault">#ffffff</color>
     <color name="buttonDefault">#EC268F</color>
-    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#EC268F</color>
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/buttonDefault</color>
     <color name="green">#22B500</color>
     <color name="red">#910000</color>
 </resources>

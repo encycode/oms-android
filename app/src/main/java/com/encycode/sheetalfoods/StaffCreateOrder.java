@@ -212,7 +212,7 @@ public class StaffCreateOrder extends AppCompatActivity {
                     isDone = false;
                 } else {
                     if (isDone) {
-                        sendPost(dealerId, shopName.getText().toString(), address.getText().toString(), mobile.getText().toString(), "staff", catId);
+                        sendPost(dealerIds.get(dealerId), shopName.getText().toString(), address.getText().toString(), mobile.getText().toString(), "staff", catId);
                         //Toast.makeText(StaffCreateOrder.this, "hii", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -221,9 +221,9 @@ public class StaffCreateOrder extends AppCompatActivity {
     }
 
     public void sendPost(int receiver_client, String shop_name, String address, String mobile, String orderby, int category) {
-        //loading.startLoading();
+        loading.startLoading();
         Log.d("init val", "onResponse: " + receiver_client + ","+ shop_name+","+address+","+mobile+","+orderby+","+category);
-        mAPIService.OrderStaffPostRequest(1, shop_name, mobile, address, orderby, category).enqueue(new Callback<StaffOrderRequest>() {
+        mAPIService.OrderStaffPostRequest(receiver_client, shop_name, mobile, address, orderby, category).enqueue(new Callback<StaffOrderRequest>() {
             @Override
             public void onResponse(Call<StaffOrderRequest> call, Response<StaffOrderRequest> response) {
 
@@ -236,19 +236,19 @@ public class StaffCreateOrder extends AppCompatActivity {
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getShopName());
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getAddress());
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getMobile());
-//                        orders = new Orders(response.body().getOrders().getId().intValue(), response.body().getOrders().getSenderClientid().intValue(), response.body().getOrders().getReceiverClientid().intValue(), response.body().getOrders().getShopName(), response.body().getOrders().getAddress(), response.body().getOrders().getMobile(), response.body().getOrders().getOrderby(), response.body().getOrders().getCategoryId().intValue(), response.body().getOrders().getStatus(), response.body().getOrders().getOrderNumber(), response.body().getOrders().getUserId().intValue(), response.body().getOrders().getCreatedAt(), response.body().getOrders().getUpdatedAt(), response.body().getOrders().getDeletedAt());
-//                        ordersViewModel.insert(orders);
-//                        Intent i = new Intent(StaffCreateOrder.this, ViewOrders.class);
-//                        i.putExtra("currentOrder", orders);
-                        //loading.endLoading();
-//                        startActivity(i);
+                        orders = new Orders(response.body().getOrders().getId().intValue(), response.body().getOrders().getSenderClientid().intValue(), response.body().getOrders().getReceiverClientid().intValue(), response.body().getOrders().getShopName(), response.body().getOrders().getAddress(), response.body().getOrders().getMobile(), response.body().getOrders().getOrderby(), response.body().getOrders().getCategoryId().intValue(), response.body().getOrders().getStatus(), response.body().getOrders().getOrderNumber(), response.body().getOrders().getUserId().intValue(), response.body().getOrders().getCreatedAt(), response.body().getOrders().getUpdatedAt(), response.body().getOrders().getDeletedAt());
+                        ordersViewModel.insert(orders);
+                        Intent i = new Intent(StaffCreateOrder.this, ViewOrders.class);
+                        i.putExtra("currentOrder", orders);
+                        loading.endLoading();
+                        startActivity(i);
                         finish();
                     }
                 } else {
                     if (response.code() == 401) {
                         APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
                         Log.i("Create Order Request", "post submitted to API." + message.getMessage());
-                        //loading.endLoading();
+                        loading.endLoading();
                         Toast.makeText(StaffCreateOrder.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -258,7 +258,7 @@ public class StaffCreateOrder extends AppCompatActivity {
             public void onFailure(Call<StaffOrderRequest> call, Throwable t) {
                 Log.e("error", t.getMessage());
                 Toast.makeText(StaffCreateOrder.this, "hello", Toast.LENGTH_SHORT).show();
-                //loading.endLoading();
+                loading.endLoading();
             }
 
         });
