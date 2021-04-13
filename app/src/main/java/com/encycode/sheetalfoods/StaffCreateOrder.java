@@ -39,7 +39,6 @@ import retrofit2.Response;
 
 public class StaffCreateOrder extends AppCompatActivity {
 
-    Toolbar toolbar;
     AutoCompleteTextView dealerName;
     private TextInputLayout textInputLayout;
     Button btnCreateStaffOrder;
@@ -62,12 +61,8 @@ public class StaffCreateOrder extends AppCompatActivity {
         loading = new ProgressLoading(StaffCreateOrder.this);
         dealerName = findViewById(R.id.dealerNameDropdown);
         textInputLayout = findViewById(R.id.dealerName_dropdown);
-        toolbar = findViewById(R.id.toolbar);
+
         getSupportActionBar().hide();
-        toolbar.setTitle("Create Order");
-        toolbar.setTitleTextColor(getColor(R.color.white));
-        toolbar.setBackgroundColor(getColor(R.color.buttonDefault));
-        setActionBar(toolbar);
 
         ordersViewModel = new OrdersViewModel(getApplication());
 

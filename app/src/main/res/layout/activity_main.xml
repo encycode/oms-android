@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundDefault"
     android:orientation="vertical"
+    tools:openDrawer="start"
     android:id="@+id/drawer"
     tools:context=".MainActivity">
     

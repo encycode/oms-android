@@ -9,12 +9,17 @@
     android:weightSum="10"
     tools:context=".StaffCreateOrder">
 
-    <Toolbar
+    <TextView
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
+        android:text="Create Order"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        android:background="@color/buttonDefault"
         android:layout_marginBottom="30dp" />
 
     <androidx.cardview.widget.CardView

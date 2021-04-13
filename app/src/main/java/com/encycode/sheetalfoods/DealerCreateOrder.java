@@ -35,7 +35,6 @@ public class DealerCreateOrder extends AppCompatActivity {
     TextView shop_name, mobile, category;
     Button btnCreateOrder;
     Intent i;
-    Toolbar toolbar;
     OrdersViewModel viewModel;
     Orders orders;
     private APIService mAPIService;
@@ -47,12 +46,7 @@ public class DealerCreateOrder extends AppCompatActivity {
         setContentView(R.layout.activity_dealer_create_order);
 
         loading = new ProgressLoading(DealerCreateOrder.this);
-        toolbar = findViewById(R.id.toolbar);
         getSupportActionBar().hide();
-        toolbar.setTitle("Create Order");
-        toolbar.setTitleTextColor(getColor(R.color.white));
-        toolbar.setBackgroundColor(getColor(R.color.buttonDefault));
-        setActionBar(toolbar);
 
         shop_name = findViewById(R.id.shopNameTV);
         mobile = findViewById(R.id.mobileNoTV);
