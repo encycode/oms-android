@@ -109,7 +109,7 @@ public class OrderDetails extends AppCompatActivity {
 
 
         currentOrder = (Orders) getIntent().getSerializableExtra("currentOrder");
-        ProductsAdapter adapter = new ProductsAdapter(OrderDetails.this, currentOrder.getId());
+        ProductsAdapter adapter = new ProductsAdapter(OrderDetails.this, currentOrder.getStatus());
         orderDetailsViewModel = ViewModelProviders.of(this).get(OrderDetailsViewModel.class);
         orderDetailsViewModel.getSpecificOrderDetails(currentOrder.getId()).observe(this, new Observer<List<com.encycode.sheetalfoods.entity.OrderDetails>>() {
             @Override
@@ -117,9 +117,6 @@ public class OrderDetails extends AppCompatActivity {
                 //Toast.makeText(OrderDetails.this, "" + orderDetails.size(), Toast.LENGTH_SHORT).show();
                 adapter.setOrderDetails(orderDetails);
                 adapter.notifyDataSetChanged();
-                if (confirm.getVisibility() == View.GONE) {
-                    confirm.setVisibility(View.VISIBLE);
-                }
                 if (headerLayout.getVisibility() == View.GONE) {
                     headerLayout.setVisibility(View.VISIBLE);
                 }
@@ -146,9 +143,16 @@ public class OrderDetails extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         if (currentOrder.getStatus().equals("Confirmed")) {
+            //Toast.makeText(this,currentOrder.getStatus() , Toast.LENGTH_SHORT).show();
             confirm.setVisibility(View.GONE);
-        } else
+        }  if (currentOrder.getStatus().equals("Locked")) {
+            confirm.setVisibility(View.GONE);
+            button.setVisibility(View.GONE);
+        }
+        else {
+            button.setVisibility(View.VISIBLE);
             confirm.setVisibility(View.VISIBLE);
+        }
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,10 +188,10 @@ public class OrderDetails extends AppCompatActivity {
 
 
                 addProduct = new Dialog(OrderDetails.this);
+                addProduct.setContentView(R.layout.add_product_popup_design);
                 productTypeError = addProduct.findViewById(R.id.productTypeError);
                 productError = addProduct.findViewById(R.id.productError);
                 caretError = addProduct.findViewById(R.id.caretError);
-                addProduct.setContentView(R.layout.add_product_popup_design);
                 totalItem = addProduct.findViewById(R.id.caretTotalItemTV);
                 caretOrder = addProduct.findViewById(R.id.caretCount);
                 add = addProduct.findViewById(R.id.addBtn);
@@ -269,7 +273,7 @@ public class OrderDetails extends AppCompatActivity {
                                 productTypeError.setVisibility(View.VISIBLE);
                                 isDone = false;
                             } else {
-                                if (productTypeError.getVisibility() == View.VISIBLE) {
+                                if(productTypeError.getVisibility() == View.VISIBLE) {
                                     productTypeError.setVisibility(View.GONE);
                                 }
                                 isDone = true;
@@ -283,11 +287,11 @@ public class OrderDetails extends AppCompatActivity {
                     public void onFocusChange(View v, boolean hasFocus) {
                         if (!hasFocus) {
                             product.clearFocus();
-                            if (product.getText().equals("")) {
+                            if (product.getText().length()==0) {
                                 productError.setVisibility(View.VISIBLE);
                                 isDone = false;
                             } else {
-                                if (productError.getVisibility() == View.VISIBLE) {
+                                if(productError.getVisibility()==View.VISIBLE) {
                                     productError.setVisibility(View.GONE);
                                 }
                                 isDone = true;
@@ -301,25 +305,22 @@ public class OrderDetails extends AppCompatActivity {
                     public void onFocusChange(View v, boolean hasFocus) {
                         if (!hasFocus) {
                             caretOrder.clearFocus();
-                            if (caretOrder.getText().equals("")) {
+                            if (caretOrder.getText().length() == 0) {
                                 caretError.setVisibility(View.VISIBLE);
                                 isDone = false;
-                            }
-                            if (Integer.parseInt(caretOrder.getText().toString()) == 0) {
+                            }else if (caretOrder.getText().toString().equals("0")) {
                                 caretError.setText("Order cannot be of 0 caret.");
                                 caretError.setVisibility(View.VISIBLE);
                                 isDone = false;
-                            }
-                            if (caretOrder.getText().toString().contains(".")) {
+                            }else if (caretOrder.getText().toString().contains(".")) {
                                 caretError.setText("Caret number must be in decimal");
                                 caretError.setVisibility(View.VISIBLE);
                                 isDone = true;
                             } else {
-                                if (caretError.getVisibility() == View.VISIBLE) {
+                                if(caretError.getVisibility()==View.VISIBLE) {
                                     caretError.setVisibility(View.GONE);
-
+                                    isDone = true;
                                 }
-                                isDone = true;
                             }
                         }
                     }
@@ -370,11 +371,15 @@ public class OrderDetails extends AppCompatActivity {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (!caretOrder.getText().toString().equals("")) {
+                        if (caretOrder.getText().length()!=0) {
                             int count = Integer.valueOf(caretOrder.getText().toString());
                             int productCount = productsList.get(selectedProductId).getCaretItem() * count;
                             totalItem.setText(productCount + "");
+                            if(caretError.getVisibility()==View.VISIBLE) {
+                                caretError.setVisibility(View.GONE);
+                            }
                         } else {
+                            caretError.setVisibility(View.VISIBLE);
                             totalItem.setText("0");
                         }
                     }
@@ -382,25 +387,21 @@ public class OrderDetails extends AppCompatActivity {
                 add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (caretOrder.getText().equals("")) {
+                        if (caretOrder.getText().length()==0) {
                             caretError.setVisibility(View.VISIBLE);
                             isDone = false;
-                        }
-                        if (Integer.parseInt(caretOrder.getText().toString()) == 0) {
+                        }else if (caretOrder.getText().toString().equals("0")) {
                             caretError.setText("Order cannot be of 0 caret.");
                             caretError.setVisibility(View.VISIBLE);
                             isDone = false;
-                        }
-                        if (caretOrder.getText().toString().contains(".")) {
+                        }else if (caretOrder.getText().toString().contains(".")) {
                             caretError.setText("Caret number must be in decimal");
                             caretError.setVisibility(View.VISIBLE);
                             isDone = true;
-                        }
-                        if (product.getText().equals("")) {
+                        }else if (product.getText().length()==0) {
                             productError.setVisibility(View.VISIBLE);
                             isDone = false;
-                        }
-                        if (productType.getText().equals("")) {
+                        }else if (productType.getText().length()==0) {
                             productTypeError.setVisibility(View.VISIBLE);
                             isDone = false;
                         } else {

@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.encycode.sheetalfoods.OMSDatabase;
 import com.encycode.sheetalfoods.dao.OrdersDao;
-import com.encycode.sheetalfoods.databases.OrdersDatabase;
 import com.encycode.sheetalfoods.entity.Orders;
 import com.encycode.sheetalfoods.helper.request.Order;
 
@@ -21,7 +21,7 @@ public class OrdersRepo {
     private LiveData<List<Orders>> allOrders;
 
     public OrdersRepo(Application application) {
-        OrdersDatabase database = OrdersDatabase.getInstance(application);
+        OMSDatabase database = OMSDatabase.getInstance(application);
         dao = database.ordersDao();
         allOrders = dao.getAllOrders();
     }

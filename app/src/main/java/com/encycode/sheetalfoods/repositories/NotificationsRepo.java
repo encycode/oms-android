@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.encycode.sheetalfoods.OMSDatabase;
 import com.encycode.sheetalfoods.dao.NotificationsDao;
-import com.encycode.sheetalfoods.databases.NotificationsDatabase;
 import com.encycode.sheetalfoods.entity.Notifications;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class NotificationsRepo {
     private LiveData<List<Notifications>> allNotifications;
 
     public NotificationsRepo(Application application) {
-        NotificationsDatabase db = NotificationsDatabase.getInstance(application);
+        OMSDatabase db = OMSDatabase.getInstance(application);
         dao = db.notificationsDao();
         allNotifications = dao.getAllNotifications();
     }

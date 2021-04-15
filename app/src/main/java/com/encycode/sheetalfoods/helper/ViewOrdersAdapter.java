@@ -36,6 +36,7 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
     List<Orders> allOrders = new ArrayList<>();
     Context context;
     private APIService mAPIService;
+    String btnStatus;
 
     public ViewOrdersAdapter(Context context) {
         this.context = context;
@@ -57,15 +58,18 @@ public class ViewOrdersAdapter extends RecyclerView.Adapter<ViewOrdersAdapter.Vi
         holder.shopName.setText(currentOrder.getShopName());
         holder.orderId.setText(currentOrder.getOrderNumber());
         holder.status.setText(currentOrder.getStatus());
-        String btnStatus;
         if (currentOrder.getStatus().equals("Cancelled")) {
             holder.orderOpBtn.setBackgroundTintList(context.getResources().getColorStateList(R.color.green));
             holder.orderOpBtn.setText("Reorder");
             btnStatus = "reorder";
-        } else {
+        } if (currentOrder.getStatus().equals("Pending")) {
             holder.orderOpBtn.setBackgroundTintList(context.getResources().getColorStateList(R.color.red));
             holder.orderOpBtn.setText("Cancel");
             btnStatus = "cancel";
+        } if (currentOrder.getStatus().equals("Locked")) {
+            holder.orderOpBtn.setEnabled(false);
+            holder.orderOpBtn.setBackgroundTintList(context.getResources().getColorStateList(R.color.grey));
+            holder.orderOpBtn.setText("LOCKED");
         }
 
         holder.orderOpBtn.setOnClickListener(new View.OnClickListener() {

@@ -5,9 +5,8 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.encycode.sheetalfoods.OMSDatabase;
 import com.encycode.sheetalfoods.dao.CategoriesDao;
-import com.encycode.sheetalfoods.dao.OrdersDao;
-import com.encycode.sheetalfoods.databases.CategoriesDatabase;
 import com.encycode.sheetalfoods.entity.Categories;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class CategoriesRepo {
     private LiveData<List<Categories>> allCategories;
 
     public CategoriesRepo(Application application) {
-        CategoriesDatabase database = CategoriesDatabase.getInstance(application);
+        OMSDatabase database = OMSDatabase.getInstance(application);
         dao = database.categoriesDao();
         allCategories = dao.getAllCategories();
     }

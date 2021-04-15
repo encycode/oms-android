@@ -45,7 +45,6 @@
         android:layout_weight="1"
         android:gravity="center"
         android:src="@drawable/remove"
-        android:tint="#EC0202"
         android:background="@color/white"/>
 
 

@@ -35,7 +35,7 @@ import retrofit2.Response;
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductHolder> {
 
     Context context;
-    int productId;
+    String status;
     private APIService mAPIService;
     List<com.encycode.sheetalfoods.entity.OrderDetails> orderDetails = new ArrayList<>();
     List<Products> productsFinal = new ArrayList<>();
@@ -43,9 +43,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     ProductsViewModel productsViewModel;
     OrderDetailsViewModel orderDetailsViewModel;
 
-    public ProductsAdapter(Context context, int productId) {
+    public ProductsAdapter(Context context, String status) {
         this.context = context;
-        this.productId = productId;
+        this.status = status;
     }
 
     @NonNull
@@ -72,6 +72,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             }
         });
         holder.caretOrder.setText(String.valueOf(orderDetails.get(position).getCaretOrder()));
+        if(status.equals("Locked")) {
+            holder.delete.setEnabled(false);
+            holder.delete.setImageResource(R.drawable.remove_grey);
+        }
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

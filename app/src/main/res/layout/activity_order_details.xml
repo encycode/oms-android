@@ -214,6 +214,7 @@
                 android:layout_margin="20dp"
                 android:backgroundTint="@color/buttonDefault"
                 android:text="Confirm Order"
+                android:visibility="gone"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 

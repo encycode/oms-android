@@ -145,7 +145,7 @@
             android:drawableLeft="@drawable/error"
             android:drawablePadding="10sp"
             android:drawableTint="@color/red"
-            android:text="Please select Product Type."
+            android:text="Please Enter caret number."
             android:textColor="@color/red"
             android:visibility="gone"
             android:textSize="18sp" />

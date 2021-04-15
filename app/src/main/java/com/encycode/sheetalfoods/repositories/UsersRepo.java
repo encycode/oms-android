@@ -4,12 +4,9 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
-
+import com.encycode.sheetalfoods.OMSDatabase;
 import com.encycode.sheetalfoods.dao.UsersDao;
-import com.encycode.sheetalfoods.databases.UsersDatabase;
 import com.encycode.sheetalfoods.entity.Users;
-import com.google.gson.internal.$Gson$Preconditions;
-
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -19,7 +16,7 @@ public class UsersRepo {
     private LiveData<List<Users>> allUsers;
 
     public UsersRepo(Application application) {
-        UsersDatabase db = UsersDatabase.getInstance(application);
+        OMSDatabase db = OMSDatabase.getInstance(application);
         dao = db.usersDao();
         allUsers = dao.getAllUsers();
     }
@@ -47,7 +44,7 @@ public class UsersRepo {
     public LiveData<List<Users>> getUserById(int id) {
         LiveData<List<Users>> users = null;
         try {
-            users =  new GetUserByIdAsyncTask(dao).execute(id).get();
+            users = new GetUserByIdAsyncTask(dao).execute(id).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -56,7 +53,7 @@ public class UsersRepo {
         return users;
     }
 
-    public class InsertAsyncTask extends AsyncTask<Users,Void,Void> {
+    public class InsertAsyncTask extends AsyncTask<Users, Void, Void> {
 
         private UsersDao dao;
 
@@ -71,7 +68,7 @@ public class UsersRepo {
         }
     }
 
-    public class GetAllUsersByRole extends AsyncTask<String,Void,LiveData<List<Users>>> {
+    public class GetAllUsersByRole extends AsyncTask<String, Void, LiveData<List<Users>>> {
 
         private UsersDao dao;
 
@@ -85,7 +82,7 @@ public class UsersRepo {
         }
     }
 
-    public class GetUserByIdAsyncTask extends AsyncTask<Integer,Void,LiveData<List<Users>>> {
+    public class GetUserByIdAsyncTask extends AsyncTask<Integer, Void, LiveData<List<Users>>> {
 
         private UsersDao dao;
 

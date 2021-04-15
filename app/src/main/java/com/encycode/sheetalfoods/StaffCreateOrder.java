@@ -123,17 +123,6 @@ public class StaffCreateOrder extends AppCompatActivity {
                     }
                 }
                 //Toast.makeText(StaffCreateOrder.this, "" + dealerId, Toast.LENGTH_SHORT).show();
-                if (dealerId != -1) {
-                    usersViewModel.getUserById(dealerIds.get(dealerId)).observe(StaffCreateOrder.this, new Observer<List<Users>>() {
-                        @Override
-                        public void onChanged(List<Users> users) {
-                            //Toast.makeText(StaffCreateOrder.this, users.get(0).getShopName(), Toast.LENGTH_SHORT).show();
-                            shopName.setText(users.get(0).getShopName());
-                            mobile.setText(users.get(0).getMobile());
-                            address.setText(users.get(0).getAddress());
-                        }
-                    });
-                }
             }
         });
 
