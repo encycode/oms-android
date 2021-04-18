@@ -85,33 +85,7 @@ public class Notifications extends AppCompatActivity {
             }
         });
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
 
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                new AlertDialog.Builder(Notifications.this)
-                        .setTitle("Title")
-                        .setMessage("Do you really want to delete ?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                deleteNotification(adapter.getNotificationAt(viewHolder.getAdapterPosition()));
-                                adapter.notifyDataSetChanged();
-                            }})
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                adapter.notifyDataSetChanged();
-                            }
-                        }).show();
-            }
-        }).attachToRecyclerView(recyclerView);
-//        deleteNotification(1);
     }
 
     public void getNotification() {
@@ -147,50 +121,6 @@ public class Notifications extends AppCompatActivity {
 //                        loading.endLoading();
                         Toast.makeText(Notifications.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                         //loading.endLoading();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<NotificationRequest> call, Throwable t) {
-                Log.e("error", t.getMessage());
-            }
-
-        });
-    }
-
-    public void deleteNotification(com.encycode.sheetalfoods.entity.Notifications notifications) {
-        //loading.startLoading();
-        int id = notifications.getId();
-        mAPIService.DeleteNotificationRequest(id).enqueue(new Callback<NotificationRequest>() {
-            @Override
-            public void onResponse(Call<NotificationRequest> call, Response<NotificationRequest> response) {
-
-                if (response.isSuccessful()) {
-                    viewModel.delete(notifications);
-                    if (response.code() == 200) {
-                        Log.i("Delete Notifications", "post submitted to API." + response.body().getMessage());
-                        notificationDeleteList = response.body().getNotifications();
-                        for (int i = 0; i < notificationDeleteList.size(); i++) {
-                            Long id = notificationDeleteList.get(i).getId();
-                            String title = notificationDeleteList.get(i).getTitle();
-                            String description = notificationDeleteList.get(i).getDescription();
-                            String image = notificationDeleteList.get(i).getImage();
-                            Long userId = notificationDeleteList.get(i).getUserId();
-                            String createdAt = notificationDeleteList.get(i).getCreatedAt();
-                            String updatedAt = notificationDeleteList.get(i).getUpdatedAt();
-                            String deletedAt = notificationDeleteList.get(i).getDeletedAt();
-                            Log.i("log notification title", "onResponse: " + title);
-                            Log.i("log notification image", "onResponse: " + image);
-                            Log.i("log notification userid", "onResponse: " + userId);
-                        }
-                    }
-                } else {
-                    if (response.code() == 401) {
-                        APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
-                        Log.i("Create Order Request", "post submitted to API." + message.getMessage());
-//                        loading.endLoading();
-                        Toast.makeText(Notifications.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
