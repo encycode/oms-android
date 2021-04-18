@@ -222,7 +222,7 @@ public class StaffCreateOrder extends AppCompatActivity {
                         Log.d("staff Test", "onResponse: " + response.body().getOrders().getMobile());
                         orders = new Orders(response.body().getOrders().getId().intValue(), response.body().getOrders().getSenderClientid().intValue(), response.body().getOrders().getReceiverClientid().intValue(), response.body().getOrders().getShopName(), response.body().getOrders().getAddress(), response.body().getOrders().getMobile(), response.body().getOrders().getOrderby(), response.body().getOrders().getCategoryId().intValue(), response.body().getOrders().getStatus(), response.body().getOrders().getOrderNumber(), response.body().getOrders().getUserId().intValue(), response.body().getOrders().getCreatedAt(), response.body().getOrders().getUpdatedAt(), response.body().getOrders().getDeletedAt());
                         ordersViewModel.insert(orders);
-                        Intent i = new Intent(StaffCreateOrder.this, ViewOrders.class);
+                        Intent i = new Intent(StaffCreateOrder.this, OrderDetails.class);
                         i.putExtra("currentOrder", orders);
                         loading.endLoading();
                         startActivity(i);

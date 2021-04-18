@@ -117,12 +117,15 @@ public class OrderDetails extends AppCompatActivity {
                 //Toast.makeText(OrderDetails.this, "" + orderDetails.size(), Toast.LENGTH_SHORT).show();
                 adapter.setOrderDetails(orderDetails);
                 adapter.notifyDataSetChanged();
-                if (headerLayout.getVisibility() == View.GONE) {
-                    headerLayout.setVisibility(View.VISIBLE);
-                }
                 if (adapter.getItemCount() == 0) {
                     confirm.setVisibility(View.GONE);
                     headerLayout.setVisibility(View.GONE);
+                } else {
+                    if(confirm.getVisibility()==View.GONE) {
+                        confirm.setVisibility(View.VISIBLE);
+                    }if(headerLayout.getVisibility()==View.GONE) {
+                        headerLayout.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });

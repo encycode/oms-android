@@ -109,6 +109,7 @@ public class DealerCreateOrder extends AppCompatActivity {
         Intent i = new Intent(DealerCreateOrder.this,OrderDetails.class);
         i.putExtra("currentOrder",orders);
         startActivity(i);
+        finish();
     }
 
 }
